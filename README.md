@@ -1,7 +1,7 @@
 # ⛏️ CoalSentinel AI — National Coal Mine Safety & DGMS Regulatory Intelligence System
 ### 🏆 Built for Smart India Hackathon (SIH 2026) — Final Round
 
-> **"Bridging the Gap Between Human Mining Shift Logs and IoT Ground Truth with Autonomous Contradiction Detection, Compliance DNA Profiling, and SHA-256 Cryptographic Audit Chains."**
+> **"Bridging the Gap Between Human Mining Shift Logs and Continuous Telemetry Ground Truth with Autonomous Contradiction Detection, Compliance DNA Profiling, and SHA-256 Cryptographic Audit Chains."**
 
 ---
 
@@ -11,7 +11,7 @@ Under the jurisdiction of the **Directorate General of Mines Safety (DGMS)** and
 
 The primary regulatory loophole is **human report falsification**: shift supervisors often log *"CH4 is safe at 0.15%"* on paper or digital shift logs to avoid production downtime, even when working faces are on the brink of disaster.
 
-**CoalSentinel AI** is an autonomous compliance intelligence platform that solves this challenge. It continuously correlates IoT multi-gas sensor feeds, anemometers, and CPCB ambient particulate monitors against official human inspection records, immediately flagging discrepancies through its proprietary **Contradiction Engine**, profiling mines via **Compliance DNA**, and recording all events in an immutable **SHA-256 Cryptographic Blockchain Ledger**.
+**CoalSentinel AI** is an autonomous compliance intelligence platform that solves this challenge. It continuously correlates multi-gas telemetry feeds, ultrasonic anemometers, and CPCB ambient particulate monitors against official human inspection records, immediately flagging discrepancies through its proprietary **Contradiction Engine**, profiling mines via **Compliance DNA**, and recording all events in an immutable **SHA-256 Cryptographic Blockchain Ledger**.
 
 ---
 
@@ -29,9 +29,9 @@ The primary regulatory loophole is **human report falsification**: shift supervi
 - Live telemetry tooltips: Methane (CH4), Air Velocity, and Respirable Dust (PM10).
 
 ### 2. ⚖️ Contradiction Engine (SIH Flagship Feature)
-- Cross-examines official human shift inspection reports against continuous IoT sensor ground truth.
-- **Example Detected:** A shift manager filed *"CH4 is 0.15% (Nominal)"*, but IoT Sensor CH4-03 logged **1.48% CH4** (9.8x higher than reported, exceeding the DGMS evacuation limit of 1.25%).
-- Computes a real-time **Human-Sensor Trust Index (0–100%)** and prescribes automated DGMS Section 22 inquiry procedures.
+- Cross-examines official human shift inspection reports against continuous telemetry station ground truth.
+- **Example Detected:** A shift manager filed *"CH4 is 0.15% (Nominal)"*, but Continuous Telemetry Station CH4-03 logged **1.48% CH4** (9.8x higher than reported, exceeding the DGMS evacuation limit of 1.25%).
+- Computes a real-time **Compliance Trust Index (0–100%)** and prescribes automated DGMS Section 22 inquiry procedures.
 
 ### 3. 🧬 Compliance DNA Intelligence Profile
 - Multi-dimensional safety genome across 5 core pillars:
@@ -112,7 +112,7 @@ Navigate to: `http://localhost:3000`
    - Show the **MapTiler** high-resolution satellite imagery with 3D terrain tilt.
    - Click on the pulsing red marker for Jharia Underground Pit #4 to inspect live methane, air velocity, and equipment health in the side drawer.
 3. **Contradiction Engine (`/investigations`):**
-   - **Show the SIH Flagship Feature:** Display the side-by-side visual diff showing the shift supervisor's signed log claiming *0.15% CH4* versus the IoT sensor registering a dangerous *1.48% spike*!
+   - **Show the SIH Flagship Feature:** Display the side-by-side visual diff showing the shift supervisor's signed log claiming *0.15% CH4* versus the continuous telemetry station registering a dangerous *1.48% spike*!
    - Highlight how the Trust Index dropped to 5% and automatically triggered a DGMS inquiry recommendation.
 4. **Compliance DNA (`/compliance-dna`):**
    - Show the **5-Axis Radar Chart** and explain the composite genome score.

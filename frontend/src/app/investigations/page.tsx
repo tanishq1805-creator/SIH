@@ -58,7 +58,7 @@ function InvestigationsContent() {
               Machine-Readable DGMS Regulation Engine Evaluator
             </h3>
             <p className="text-xs text-slate-400">
-              Evaluates live IoT telemetry streams against codified Coal Mines Regulations 2017 & CPCB statutes
+              Evaluates live continuous telemetry streams against codified Coal Mines Regulations 2017 & CPCB statutes
             </p>
           </div>
           <span className="text-xs text-slate-500 font-mono">Status: PASS / FAIL / UNKNOWN</span>

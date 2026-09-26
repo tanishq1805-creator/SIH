@@ -6,8 +6,8 @@ def detect_contradictions(mine_id: str):
     """
     Contradiction Engine:
     Cross-checks official human shift supervisor / DGMS inspection reports
-    against raw IoT sensor ground truth telemetry.
-    Identifies discrepancies, falsified safety declarations, and computes a Human-Sensor Trust Index.
+    against continuous mine telemetry station ground truth.
+    Identifies discrepancies, falsified safety declarations, and computes a Compliance Trust Index.
     """
     conn = get_db()
     cursor = conn.cursor()
@@ -44,7 +44,7 @@ def detect_contradictions(mine_id: str):
     contradictions = []
     trust_deductions = 0
 
-    # 1. Check Methane Discrepancy (Human Report vs IoT Sensor)
+    # 1. Check Methane Discrepancy (Human Report vs Continuous Telemetry Station)
     reported_ch4 = insp.get("declared_methane", 0.0)
     actual_ch4 = safety.get("ch4_percent", 0.0)
     ch4_delta = abs(actual_ch4 - reported_ch4)

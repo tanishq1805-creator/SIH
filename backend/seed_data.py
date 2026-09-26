@@ -393,7 +393,7 @@ def seed():
             json.dumps({"sensor_id": "CH4-03", "location": "Return Airway 4A", "readings_window": [0.65, 0.82, 1.12, 1.48], "calibration_date": "2026-09-20"}),
             "8e22b10a43f5e921d7b14",
             iso_now,
-            "IoT Continuous Methane Telemetry System"
+            "Continuous Methane Telemetry Station"
         ),
         (
             "evid-02",

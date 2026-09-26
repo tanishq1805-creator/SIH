@@ -63,7 +63,7 @@ export default function ContradictionDiff({ data, onRefresh }: ContradictionDiff
               Contradiction & Falsification Engine
             </h2>
             <p className="text-xs sm:text-sm text-slate-300 max-w-2xl leading-relaxed">
-              Cross-examines official shift inspection logs signed by mine personnel against continuous IoT gas sensors, ultrasonic anemometers, and CPCB particulate monitors.
+              Cross-examines official shift inspection logs signed by mine personnel against continuous gas telemetry, ultrasonic anemometers, and CPCB particulate monitoring stations.
             </p>
           </div>
 
@@ -118,7 +118,7 @@ export default function ContradictionDiff({ data, onRefresh }: ContradictionDiff
             <CheckCircle className="w-8 h-8 text-emerald-400 mx-auto" />
             <h4 className="font-bold text-white text-sm">Perfect Human-Sensor Alignment</h4>
             <p className="text-xs text-slate-300">
-              Human supervisor logs are 100% consistent with continuous IoT telemetry data. Zero falsifications detected.
+              Human supervisor logs are 100% consistent with continuous telemetry data. Zero falsifications detected.
             </p>
           </div>
         ) : (
@@ -166,12 +166,12 @@ export default function ContradictionDiff({ data, onRefresh }: ContradictionDiff
                   </div>
                 </div>
 
-                {/* Right: IoT Sensor Truth */}
+                {/* Right: Telemetry Truth */}
                 <div className="p-4 rounded-xl bg-red-950/20 border border-red-500/30 space-y-2">
                   <div className="flex items-center justify-between text-xs text-red-400 border-b border-red-500/20 pb-2">
                     <span className="flex items-center gap-1.5 font-bold text-red-300">
                       <Radio className="w-3.5 h-3.5 animate-pulse text-red-400" />
-                      Continuous IoT Telemetry (Ground Truth)
+                      Continuous Mine Telemetry (Ground Truth)
                     </span>
                     <span className="text-[10px] bg-red-500/20 px-1.5 py-0.5 rounded text-red-300 font-bold font-mono">
                       ACTUAL

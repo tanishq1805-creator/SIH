@@ -112,7 +112,7 @@ def compute_compliance_dna(mine_id: str):
             "category": "Human Log vs Telemetry Contradiction",
             "frequency": "Detected across multiple shifts",
             "impact": "Regulatory Penalty under DGMS Sec 22",
-            "recommendation": "Transition to biometrically signed automated IoT audit logs."
+            "recommendation": "Transition to biometrically signed automated telemetry audit logs."
         })
 
     # Simulated 52-week compliance activity history (like GitHub contribution graph)

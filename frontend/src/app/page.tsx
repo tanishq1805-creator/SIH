@@ -103,7 +103,7 @@ function DashboardContent() {
               National Coal Mine Safety & DGMS Regulatory Intelligence System
             </h1>
             <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
-              Autonomous regulatory compliance surveillance engine integrating continuous multi-gas IoT telemetry, 
+              Autonomous regulatory compliance surveillance engine integrating continuous multi-gas telemetry, 
               an automated <strong className="text-amber-400">Contradiction Engine</strong> that exposes falsified human safety logs, 
               <strong className="text-cyan-400"> Compliance DNA</strong> risk profiling, and a <strong className="text-emerald-400">SHA-256 Cryptographic Audit Ledger</strong>.
             </p>

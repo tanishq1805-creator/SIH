@@ -104,7 +104,7 @@ I am your personal mining guide and SIH 2026 intelligence assistant. Whether you
 
   const sampleQuestions = [
     { label: '⛏️ How does a coal mine work?', q: 'Explain simply how a coal mine works and how coal is extracted safely.' },
-    { label: '🚨 What did Contradiction Engine find?', q: 'What discrepancies between human reports and IoT sensors were detected at this mine?' },
+    { label: '🚨 What did Contradiction Engine find?', q: 'What discrepancies between human reports and telemetry stations were detected at this mine?' },
     { label: '💡 Explain Opencast vs Underground', q: 'What is the simple difference between Opencast and Underground coal mining?' },
     { label: '💨 Why is Methane so dangerous?', q: 'Why is Methane gas (CH4) so dangerous in coal mines and how does ventilation save lives?' },
     { label: '🔒 How does SHA-256 stop fraud?', q: 'How does the SHA-256 cryptographic audit chain prevent anyone from tampering with safety records?' }

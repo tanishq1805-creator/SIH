@@ -34,7 +34,7 @@ LIVE MINE CONTEXT:
 - Current Status: {m['status']}
 - Latest Telemetry: Methane CH4={s.get('ch4_percent', 'N/A')}%, Air Velocity={s.get('air_velocity_mps', 'N/A')} m/s, CO={s.get('co_ppm', 'N/A')} ppm, PM10={e.get('pm10', 'N/A')} µg/m³
 - Active Open Violations: {v_count}
-- Contradiction Engine Findings: {cntr_count} discrepancies between human shift reports and IoT sensors (Trust Score: {contradiction_data.get('trust_index', 100)}%)
+- Contradiction Engine Findings: {cntr_count} discrepancies between human shift reports and continuous telemetry stations (Trust Score: {contradiction_data.get('trust_index', 100)}%)
 """
 
     if mode == "eli5":
@@ -48,7 +48,7 @@ Guidelines:
    - Opencast mines are huge step-terraced bowl excavations where massive trucks and draglines kick up suffocating dust plumes.
    - Ventilation fans are the "lungs" of an underground mine—pumping fresh air so miners can breathe and diluting explosive gases.
 2. If asked about the platform's features:
-   - "Contradiction Engine": Catches when supervisors write "everything is fine (0.15% gas)" on clipboards to avoid work delays, while automated IoT sensors detect dangerous 1.48% gas leaks.
+   - "Contradiction Engine": Catches when supervisors write "everything is fine (0.15% gas)" on clipboards to avoid work delays, while continuous telemetry stations detect dangerous 1.48% gas leaks.
    - "Compliance DNA": Like a 5-dimension medical report card for a mine.
    - "SHA-256 Audit Trail": Like a tamper-proof digital wax seal. If someone tries to edit past records to hide an accident, the math breaks and flags the fraud immediately.
 3. Tone: Friendly, inspiring, crisp, structured with bullet points and helpful emojis. Avoid heavy jargon unless you immediately explain it in plain English.
@@ -149,7 +149,7 @@ Coal mining operations under DGMS jurisdiction rely on strict ventilation, strat
 The **Contradiction Engine** is our flagship SIH feature that solves one of the oldest corruption and safety loopholes in mining: **human report falsification**.
 
 - **The Problem:** Shift supervisors sometimes mark paper logbooks as *"All normal, Methane 0.15%"* so work doesn't pause and production quotas aren't missed.
-- **The Solution:** CoalSentinel autonomously cross-examines the supervisor's signed log against real-time IoT gas sensors and ventilation monitors.
+- **The Solution:** CoalSentinel autonomously cross-examines the supervisor's signed log against continuous gas telemetry and ventilation monitoring stations.
 - **The Result:** If the sensor logged a 1.48% methane spike during that shift, CoalSentinel flags a **Critical Contradiction**, docks the mine's Trust Index, and mints the discrepancy into an immutable SHA-256 blockchain block!"""
 
     return """### 🛡️ CoalSentinel AI Copilot
@@ -157,7 +157,7 @@ The **Contradiction Engine** is our flagship SIH feature that solves one of the 
 I can help you understand:
 - **Coal Mine Operations:** How opencast and underground mines operate and how coal is extracted safely.
 - **DGMS 2017 Compliance:** Regulations covering Methane (Reg 169), Ventilation (Reg 153), and Strata (Reg 106).
-- **Contradiction Engine:** How we detect discrepancies between human inspections and IoT ground truth.
+- **Contradiction Engine:** How we detect discrepancies between human inspections and continuous telemetry ground truth.
 - **SHA-256 Cryptographic Audit:** How immutable hash chains prevent evidence tampering.
 
 *Switch between 'Simple Explainer (ELI5)' and 'SIH Technical Expert' mode above to adjust depth!*"""
