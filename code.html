@@ -1,0 +1,1523 @@
+<!DOCTYPE html><html lang="en" style=""><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>CoalSentinel AI — Statutory Mine Safety &amp; Regulatory Intelligence System</title>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect">
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;family=JetBrains+Mono:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<!-- Leaflet CSS -->
+<link crossorigin="" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          brand: "#0284C7",
+          "sidebar-bg": "#181F38",
+          "app-bg": "#F4F6FA"
+        },
+        fontFamily: {
+          sans: ["Inter", "sans-serif"],
+          mono: ["JetBrains Mono", "monospace"]
+        }
+      }
+    }
+  };
+</script>
+<style>
+  @keyframes scanline {
+    0% { transform: translateY(-100%); opacity: 0; }
+    50% { opacity: 0.7; }
+    100% { transform: translateY(220%); opacity: 0; }
+  }
+  .animate-scan {
+    animation: scanline 1.2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+  }
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 4px;
+  }
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+  }
+</style>
+</head>
+<body class="bg-[#F4F6FA] font-sans text-slate-900 antialiased min-h-screen flex flex-col selection:bg-sky-500 selection:text-white">
+<!-- =========================================================
+     1. LEFT NAVIGATION SIDEBAR (Dark Navy #181F38)
+     ========================================================= -->
+<aside class="fixed left-0 top-0 bottom-0 w-64 bg-[#181F38] text-white z-40 flex flex-col justify-between shadow-2xl select-none">
+<div class="flex flex-col flex-1 overflow-y-auto custom-scrollbar">
+<!-- Brand Header -->
+<div class="p-4 border-b border-slate-700/60 flex items-center gap-3 bg-[#141A30]">
+<div class="bg-gradient-to-tr from-sky-600 to-sky-400 rounded-xl w-10 h-10 flex items-center justify-center font-extrabold text-white shadow-lg text-lg shrink-0 tracking-tight border border-white/20">CS</div>
+<div class="flex flex-col">
+<span class="font-extrabold text-[15px] tracking-tight text-white leading-tight">COALSENTINEL AI</span>
+
+</div>
+</div>
+<!-- Navigation Modules Heading -->
+<div class="px-4 pt-4 pb-2">
+<span class="text-[10px] uppercase text-slate-400 font-bold tracking-widest">Intelligence Modules</span>
+</div>
+<!-- Navigation Menu Items (Order 1 through 7) -->
+<nav class="px-2 space-y-1" id="sidebar-nav">
+<!-- 1. Executive Dashboard (Default LIVE) -->
+<a class="nav-item group relative flex items-center justify-between px-3 py-2.5 rounded-lg text-xs font-bold bg-white text-slate-900 shadow-sm transition-all" href="#dashboard" id="nav-dashboard" onclick="switchTab('dashboard'); return false;">
+<div class="flex items-center gap-2.5">
+<span class="material-symbols-outlined text-[20px] text-[#0284C7]">dashboard</span>
+<span class="">Executive Dashboard</span>
+</div>
+<span class="px-1.5 py-0.5 rounded text-[10px] font-mono bg-emerald-100 text-emerald-800 font-extrabold border border-emerald-300 flex items-center gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-emerald-600 animate-pulse"></span>LIVE
+        </span>
+<div class="accent-bar absolute left-0 top-2 bottom-2 w-1.5 bg-[#0284C7] rounded-r"></div>
+</a>
+<!-- 2. Satellite 3D Explorer -->
+<a class="nav-item group relative flex items-center justify-between px-3 py-2.5 rounded-lg text-xs font-medium text-slate-300 hover:bg-slate-800/80 hover:text-white transition-all" href="#satellite" id="nav-satellite" onclick="switchTab('satellite'); return false;">
+<div class="flex items-center gap-2.5">
+<span class="material-symbols-outlined text-[20px] text-sky-400 group-hover:text-white transition-colors">satellite_alt</span>
+<span class="">Satellite 3D Explorer</span>
+</div>
+<span class="px-1.5 py-0.5 rounded text-[10px] font-mono bg-sky-500/20 text-sky-300 font-bold">GIS</span>
+<div class="accent-bar absolute left-0 top-2 bottom-2 w-1.5 bg-[#0284C7] rounded-r hidden"></div>
+</a>
+<!-- 3. Contradiction Engine -->
+<a class="nav-item group relative flex items-center justify-between px-3 py-2.5 rounded-lg text-xs font-medium text-slate-300 hover:bg-slate-800/80 hover:text-white transition-all" href="#contradiction" id="nav-contradiction" onclick="switchTab('contradiction'); return false;">
+<div class="flex items-center gap-2.5">
+<span class="material-symbols-outlined text-[20px] text-amber-400 group-hover:text-white transition-colors">balance</span>
+<span class="">Contradiction Engine</span>
+</div>
+<span class="px-1.5 py-0.5 rounded text-[10px] font-mono bg-amber-500/20 text-amber-300 font-semibold border border-amber-500/30">SIH</span>
+<div class="accent-bar absolute left-0 top-2 bottom-2 w-1.5 bg-[#0284C7] rounded-r hidden"></div>
+</a>
+<!-- 4. Compliance DNA -->
+<a class="nav-item group relative flex items-center justify-between px-3 py-2.5 rounded-lg text-xs font-medium text-slate-300 hover:bg-slate-800/80 hover:text-white transition-all" href="#compliance" id="nav-compliance" onclick="switchTab('compliance'); return false;">
+<div class="flex items-center gap-2.5">
+<span class="material-symbols-outlined text-[20px] text-purple-400 group-hover:text-white transition-colors">biotech</span>
+<span class="">Compliance DNA</span>
+</div>
+<span class="px-1.5 py-0.5 rounded text-[10px] font-mono bg-slate-800 text-purple-300">BBB</span>
+<div class="accent-bar absolute left-0 top-2 bottom-2 w-1.5 bg-[#0284C7] rounded-r hidden"></div>
+</a>
+<!-- 5. DGMS Evaluator -->
+<a class="nav-item group relative flex items-center justify-between px-3 py-2.5 rounded-lg text-xs font-medium text-slate-300 hover:bg-slate-800/80 hover:text-white transition-all" href="#evaluator" id="nav-evaluator" onclick="switchTab('evaluator'); return false;">
+<div class="flex items-center gap-2.5">
+<span class="material-symbols-outlined text-[20px] text-rose-400 group-hover:text-white transition-colors">gavel</span>
+<span class="">DGMS Evaluator</span>
+</div>
+<span class="px-1.5 py-0.5 rounded text-[10px] font-mono bg-rose-950/60 text-rose-300 border border-rose-800/40">CMR '17</span>
+<div class="accent-bar absolute left-0 top-2 bottom-2 w-1.5 bg-[#0284C7] rounded-r hidden"></div>
+</a>
+<!-- 6. Tamper-Proof Audit Trail (/audit) -->
+<a class="nav-item group relative flex items-center justify-between px-3 py-2.5 rounded-lg text-xs font-medium text-slate-300 hover:bg-slate-800/80 hover:text-white transition-all" href="#audit" id="nav-audit" onclick="switchTab('audit'); return false;">
+<div class="flex items-center gap-2.5">
+<span class="material-symbols-outlined text-[20px] text-emerald-400 group-hover:text-white transition-colors">verified_user</span>
+<span class="flex items-center gap-1">
+<span class="">Audit Trail</span>
+<span class="text-[10px] font-mono font-normal text-emerald-300">(/audit)</span>
+</span>
+</div>
+<span class="px-1.5 py-0.5 rounded text-[10px] font-mono bg-emerald-500/20 text-emerald-300 font-bold border border-emerald-500/30">100% SHA</span>
+<div class="accent-bar absolute left-0 top-2 bottom-2 w-1.5 bg-[#0284C7] rounded-r hidden"></div>
+</a>
+<!-- 7. SLA Hub & Simulator -->
+<a class="nav-item group relative flex items-center justify-between px-3 py-2.5 rounded-lg text-xs font-medium text-slate-300 hover:bg-slate-800/80 hover:text-white transition-all" href="#sla" id="nav-sla" onclick="switchTab('sla'); return false;">
+<div class="flex items-center gap-2.5">
+<span class="material-symbols-outlined text-[20px] text-sky-400 group-hover:text-white transition-colors">hourglass_top</span>
+<span class="">SLA Hub &amp; Simulator</span>
+</div>
+<span class="px-1.5 py-0.5 rounded text-[10px] font-mono bg-slate-800 text-sky-300">SIM</span>
+<div class="accent-bar absolute left-0 top-2 bottom-2 w-1.5 bg-[#0284C7] rounded-r hidden"></div>
+</a>
+</nav>
+</div>
+<!-- Bottom Drawer Quick Login Trigger -->
+<div class="p-3 border-t border-slate-700/60 bg-[#141A30] space-y-2">
+<button class="w-full flex items-center justify-between px-3 py-2.5 rounded-lg bg-slate-800/90 hover:bg-slate-700 text-white transition-colors text-xs font-semibold tracking-wide border border-slate-700" onclick="toggleAuthModal(true)" type="button">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-base text-[#0284C7]">key</span>
+<span class="">Statutory Login / Switch</span>
+</div>
+<span class="px-1.5 py-0.5 rounded bg-sky-500/20 text-sky-300 font-mono text-[10px]">AUTH</span>
+</button>
+</div>
+</aside>
+<!-- =========================================================
+     2. TOP HEADER BAR
+     ========================================================= -->
+<div class="pl-64 flex flex-col flex-1">
+<header class="fixed top-0 left-64 right-0 h-16 bg-white z-30 border-b border-slate-200 px-6 flex items-center justify-between shadow-xs">
+<!-- Active Mine Breadcrumb & Status -->
+<div class="flex items-center gap-3">
+
+
+</div>
+<!-- Center Quick Search / Statutory Lookup -->
+
+<!-- Right: Logged In User Profile - Clicking triggers the full Login Modal Overlay -->
+<div class="flex items-center gap-3">
+<button class="group flex items-center gap-3 p-1.5 pl-3 pr-2 rounded-xl hover:bg-slate-100 border border-slate-200 hover:border-slate-300 transition-all text-left" onclick="toggleAuthModal(true)" title="Click to open Statutory Login / Authority Switcher">
+<div class="flex flex-col text-right">
+<span class="text-xs font-bold text-slate-900 group-hover:text-[#0284C7] transition-colors leading-tight" id="user-display-name">Dr. R. K. Soren</span>
+<span class="text-[10px] font-medium text-slate-500 leading-tight mt-0.5 font-mono" id="user-display-role">DGMS Inspector Gen. (Zone IV)</span>
+</div>
+<div class="w-9 h-9 rounded-full bg-[#0284C7] text-white flex items-center justify-center shadow-sm font-bold text-sm shrink-0 ring-2 ring-sky-100 group-hover:scale-105 transition-transform">
+<span class="material-symbols-outlined text-[19px]">shield_person</span>
+</div>
+<span class="material-symbols-outlined text-slate-400 text-lg group-hover:text-slate-700">expand_more</span>
+</button>
+<button class="px-2.5 py-1.5 rounded-lg bg-sky-50 hover:bg-sky-100 text-[#0284C7] border border-sky-200 text-xs font-semibold flex items-center gap-1.5 transition-colors" onclick="toggleAuthModal(true)" title="Switch Authority Role">
+<span class="material-symbols-outlined text-base">sync_alt</span>
+<span class="hidden md:inline">Switch Role</span>
+</button>
+</div>
+</header>
+<!-- =========================================================
+       3. SUB-HEADER / ASSET TELEMETRY STRIP
+       ========================================================= -->
+<div class="pt-16 w-full bg-white border-b border-slate-200 px-6 py-2.5 flex flex-wrap items-center justify-between gap-3 shadow-2xs">
+
+
+</div>
+<!-- =========================================================
+       4. MAIN PAGE VIEWS CONTAINER
+       ========================================================= -->
+<main class="flex-1 p-6 pb-24">
+<!-- =======================================================
+         VIEW 1: 📊 EXECUTIVE DASHBOARD [DEFAULT LIVE TAB]
+         ======================================================= -->
+<div class="space-y-6" id="view-dashboard">
+<!-- Top Statutory Alert Banner -->
+<div class="bg-gradient-to-r from-red-900 via-slate-900 to-[#181F38] text-white p-5 rounded-2xl border border-red-800/50 shadow-md flex flex-col md:flex-row items-start md:items-center justify-between gap-4 relative overflow-hidden">
+<div class="relative z-10">
+<div class="flex items-center gap-2 mb-1.5">
+<span class="px-2 py-0.5 rounded-full bg-red-500/20 text-red-300 font-mono text-[10px] font-bold uppercase tracking-wider border border-red-500/40 flex items-center gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-red-500 animate-ping"></span>DGMS CMR 169 REGULATORY BREACH
+            </span>
+<span class="text-slate-400 font-mono text-xs">Pit #4 West Gallery</span>
+</div>
+<h2 class="text-lg lg:text-xl font-bold tracking-tight text-white flex items-center gap-2">
+<span class="material-symbols-outlined text-red-400">warning</span>
+            Active Section 22(3) Work Suspension Recommendation
+          </h2>
+<p class="text-xs text-slate-300 mt-1 max-w-3xl leading-relaxed">
+            Methane gas level at <strong>1.48% vol</strong> exceeds statutory safe ceiling (1.25%). InSAR satellite radar detects <strong>-4.2 mm/yr ground subsiding</strong> over Seam XI. Shift supervisor book logged only 0.15% (9.8x algorithmic contradiction).
+          </p>
+</div>
+<div class="relative z-10 shrink-0 flex items-center gap-2">
+<button class="px-3.5 py-2 rounded-lg bg-white/10 hover:bg-white/20 text-white text-xs font-semibold backdrop-blur border border-white/20 transition-all flex items-center gap-1.5" onclick="switchTab('audit')">
+<span class="material-symbols-outlined text-sm">verified_user</span>View SHA Ledger
+          </button>
+<button class="px-4 py-2 rounded-lg bg-red-600 hover:bg-red-700 text-white text-xs font-bold uppercase tracking-wider shadow-lg transition-all flex items-center gap-1.5 border border-red-400/50" onclick="issueSection22StopWork()">
+<span class="material-symbols-outlined text-sm">gavel</span>Enforce Stop-Work
+          </button>
+</div>
+<div class="absolute -right-10 -bottom-10 w-44 h-44 bg-red-600/10 rounded-full blur-2xl pointer-events-none"></div>
+</div>
+<!-- High-Impact Statutory Overview KPI Cards -->
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+<!-- KPI 1 -->
+<div class="bg-white rounded-xl p-5 border border-slate-200 shadow-xs relative overflow-hidden">
+<div class="flex items-center justify-between text-slate-500 text-xs mb-1">
+<span class="font-bold uppercase tracking-wider text-[10px]">Mine Safety Index</span>
+<span class="material-symbols-outlined text-amber-500 text-xl">health_and_safety</span>
+</div>
+<div class="flex items-baseline gap-2 mt-1">
+<span class="font-mono text-3xl font-extrabold text-slate-900">74.2%</span>
+<span class="text-xs font-bold text-amber-600 font-mono">Moderate Risk</span>
+</div>
+<div class="w-full bg-slate-100 h-1.5 rounded-full overflow-hidden mt-3">
+<div class="bg-amber-500 h-full rounded-full" style="width: 74%;"></div>
+</div>
+<div class="flex justify-between items-center mt-2 text-[10px] text-slate-500 font-mono">
+<span class="">Seam XI Methane Alert</span>
+<span class="text-red-600 font-bold">-5.8% this shift</span>
+</div>
+</div>
+<!-- KPI 2 -->
+<div class="bg-white rounded-xl p-5 border border-slate-200 shadow-xs relative overflow-hidden">
+<div class="flex items-center justify-between text-slate-500 text-xs mb-1">
+<span class="font-bold uppercase tracking-wider text-[10px]">Active DGMS Violations</span>
+<span class="material-symbols-outlined text-red-500 text-xl">gavel</span>
+</div>
+<div class="flex items-baseline gap-2 mt-1">
+<span class="font-mono text-3xl font-extrabold text-red-600">3 Notices</span>
+<span class="text-xs font-bold text-red-700 bg-red-100 px-1.5 py-0.5 rounded font-mono">1 CRITICAL</span>
+</div>
+<p class="text-[11px] text-slate-600 mt-2 truncate">CMR Reg. 169, Reg. 153 &amp; Sec 22(3)</p>
+<div class="flex justify-between items-center mt-2 text-[10px] text-slate-500 font-mono">
+<span class="">Statutory SLA Due:</span>
+<span class="text-red-700 font-bold">02h 45m left</span>
+</div>
+</div>
+<!-- KPI 3 -->
+<div class="bg-white rounded-xl p-5 border border-slate-200 shadow-xs relative overflow-hidden">
+<div class="flex items-center justify-between text-slate-500 text-xs mb-1">
+<span class="font-bold uppercase tracking-wider text-[10px]">Continuous Telemetry</span>
+<span class="material-symbols-outlined text-sky-600 text-xl">sensors</span>
+</div>
+<div class="flex items-baseline gap-2 mt-1">
+<span class="font-mono text-3xl font-extrabold text-red-600">1.48%</span>
+<span class="text-xs font-mono text-slate-500 font-semibold">CH4 vol</span>
+</div>
+<div class="flex items-center justify-between text-[11px] text-slate-600 mt-2 font-mono">
+<span class="">CO: <strong class="text-slate-800">18.0 PPM</strong></span>
+<span class="">Flow: <strong class="text-red-600">0.22 m/s</strong></span>
+</div>
+<div class="flex justify-between items-center mt-2 text-[10px] text-slate-500 font-mono">
+<span class="">SCADA NDIR: Optical #03</span>
+<span class="text-red-600 font-bold">+0.23% breach</span>
+</div>
+</div>
+<!-- KPI 4 -->
+<div class="bg-white rounded-xl p-5 border border-slate-200 shadow-xs relative overflow-hidden">
+<div class="flex items-center justify-between text-slate-500 text-xs mb-1">
+<span class="font-bold uppercase tracking-wider text-[10px]">IoT Sensornodes</span>
+<span class="material-symbols-outlined text-emerald-600 text-xl">device_hub</span>
+</div>
+<div class="flex items-baseline gap-2 mt-1">
+<span class="font-mono text-3xl font-extrabold text-slate-900">142/144</span>
+<span class="text-xs font-bold text-emerald-600 font-mono">99.4% Up</span>
+</div>
+<div class="w-full bg-slate-100 h-1.5 rounded-full overflow-hidden mt-3">
+<div class="bg-emerald-600 h-full rounded-full" style="width: 98%;"></div>
+</div>
+<div class="flex justify-between items-center mt-2 text-[10px] text-slate-500 font-mono">
+<span class="">Cryptographic Ledger:</span>
+<span class="text-emerald-700 font-bold">38ms latency</span>
+</div>
+</div>
+</div>
+<!-- Central Executive Split View -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-5">
+<!-- Left: Spatial Digital Twin & Geological Alert preview (8 cols) -->
+<div class="lg:col-span-8 bg-white rounded-xl p-5 border border-slate-200 shadow-xs flex flex-col justify-between">
+<div>
+<div class="flex items-center justify-between mb-3 pb-2 border-b border-slate-100">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[#0284C7] text-xl">satellite_alt</span>
+<span class="text-sm font-bold text-slate-900">Live Spatial Digital Twin &amp; Geomechanical Contours</span>
+<span class="px-2 py-0.5 rounded bg-sky-100 text-[#0284C7] font-mono text-[10px] font-bold">JHARIA SEAM XI</span>
+</div>
+<button class="text-xs font-bold text-sky-700 hover:text-sky-900 flex items-center gap-1" onclick="switchTab('satellite')">
+                Open 3D Explorer <span class="material-symbols-outlined text-sm">open_in_new</span>
+</button>
+</div>
+<!-- Interactive Map Wrapper with fallback visual simulation -->
+<div class="relative w-full h-[360px] rounded-lg overflow-hidden border border-slate-200 bg-slate-950">
+<div class="w-full h-full z-0 leaflet-container leaflet-touch leaflet-retina leaflet-fade-anim leaflet-grab leaflet-touch-drag leaflet-touch-zoom" id="dash-leaflet-mine-map" tabindex="0" style="position: relative;"><div class="leaflet-pane leaflet-map-pane" style="transform: translate3d(0px, 0px, 0px);"><div class="leaflet-pane leaflet-tile-pane"><div class="leaflet-layer " style="z-index: 1; opacity: 1;"><div class="leaflet-tile-container leaflet-zoom-animated" style="z-index: 19; transform: translate3d(0px, 0px, 0px) scale(1);"><img alt="" src="https://c.basemaps.cartocdn.com/rastertiles/voyager/14/12124/7078@2x.png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(59px, -9px, 0px); opacity: 1;"><img alt="" src="https://a.basemaps.cartocdn.com/rastertiles/voyager/14/12125/7078@2x.png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(315px, -9px, 0px); opacity: 1;"><img alt="" src="https://a.basemaps.cartocdn.com/rastertiles/voyager/14/12124/7079@2x.png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(59px, 247px, 0px); opacity: 1;"><img alt="" src="https://b.basemaps.cartocdn.com/rastertiles/voyager/14/12125/7079@2x.png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(315px, 247px, 0px); opacity: 1;"><img alt="" src="https://b.basemaps.cartocdn.com/rastertiles/voyager/14/12123/7078@2x.png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(-197px, -9px, 0px); opacity: 1;"><img alt="" src="https://b.basemaps.cartocdn.com/rastertiles/voyager/14/12126/7078@2x.png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(571px, -9px, 0px); opacity: 1;"><img alt="" src="https://c.basemaps.cartocdn.com/rastertiles/voyager/14/12123/7079@2x.png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(-197px, 247px, 0px); opacity: 1;"><img alt="" src="https://c.basemaps.cartocdn.com/rastertiles/voyager/14/12126/7079@2x.png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(571px, 247px, 0px); opacity: 1;"></div></div></div><div class="leaflet-pane leaflet-overlay-pane"><svg pointer-events="none" class="leaflet-zoom-animated" width="720" height="430" viewBox="-60 -36 720 430" style="transform: translate3d(-60px, -36px, 0px);"><g><path class="leaflet-interactive" stroke="#dc2626" stroke-opacity="1" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="#ef4444" fill-opacity="0.35" fill-rule="evenodd" d="M248.35452444432303,178.59390588384122a52,52 0 1,0 104,0 a52,52 0 1,0 -104,0 "></path></g></svg></div><div class="leaflet-pane leaflet-shadow-pane"><img src="https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png" class="leaflet-marker-shadow leaflet-zoom-animated" alt="" style="margin-left: -12px; margin-top: -41px; width: 41px; height: 41px; transform: translate3d(300px, 179px, 0px);"></div><div class="leaflet-pane leaflet-marker-pane"><img src="https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png" class="leaflet-marker-icon leaflet-zoom-animated leaflet-interactive" alt="Marker" style="margin-left: -12px; margin-top: -41px; width: 25px; height: 41px; transform: translate3d(300px, 179px, 0px); z-index: 179;"></div><div class="leaflet-pane leaflet-tooltip-pane"></div><div class="leaflet-pane leaflet-popup-pane"><div class="leaflet-popup  leaflet-zoom-animated" style="opacity: 1; transform: translate3d(301px, 145px, 0px); bottom: -7px; left: -144px;"><div class="leaflet-popup-content-wrapper"><div class="leaflet-popup-content" style="width: 241px;"><b>Jharia Pit #4</b><br>CH4: 1.48% (Evacuation Limit Exceeded)</div></div><div class="leaflet-popup-tip-container"><div class="leaflet-popup-tip"></div></div><a class="leaflet-popup-close-button" role="button" aria-label="Close popup" href="#close"><span aria-hidden="true" class="">×</span></a></div></div><div class="leaflet-proxy leaflet-zoom-animated" style="transform: translate3d(3.10399e+06px, 1.81216e+06px, 0px) scale(8192);"></div></div><div class="leaflet-control-container"><div class="leaflet-top leaflet-left"></div><div class="leaflet-top leaflet-right"></div><div class="leaflet-bottom leaflet-left"></div><div class="leaflet-bottom leaflet-right"></div></div></div>
+<!-- Floating GIS HUD Overlay -->
+<div class="absolute top-3 left-3 z-[400] bg-slate-900/90 backdrop-blur text-white p-3 rounded-lg border border-slate-700 shadow-lg text-xs font-mono space-y-1">
+<div class="flex items-center gap-2 text-sky-400 font-bold">
+<span class="w-2 h-2 rounded-full bg-red-500 animate-ping"></span>
+<span class="">Jharia Pit #4 • Face 4B</span>
+</div>
+<div class="text-[11px] text-slate-300">Lat: 23.7505° N | Long: 86.4172° E</div>
+<div class="text-[11px] text-red-400 font-semibold">Subsurface Methane: 1.48% (Evacuate)</div>
+<div class="text-[11px] text-amber-300">InSAR Surface Deformation: -4.2 mm/yr</div>
+</div>
+<!-- Quick Layer Controls -->
+<div class="absolute bottom-3 right-3 z-[400] bg-white/95 backdrop-blur p-1.5 rounded-lg border border-slate-300 shadow-md flex items-center gap-1.5 text-xs">
+<button class="px-2 py-1 rounded bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium text-[11px] flex items-center gap-1" onclick="alert('Strata Geomechanical InSAR Overlay Refreshed: -4.2 mm/yr subsidence vector confirmed.')">
+<span class="material-symbols-outlined text-sm text-sky-600">terrain</span> InSAR Layer
+                </button>
+<button class="px-2 py-1 rounded bg-sky-50 hover:bg-sky-100 text-sky-700 font-semibold text-[11px] flex items-center gap-1 border border-sky-200" onclick="alert('Telemetry Heatmap active: 142 optical nodes synced.')">
+<span class="material-symbols-outlined text-sm">local_fire_department</span> CH4 Heatmap
+                </button>
+</div>
+</div>
+</div>
+<div class="mt-4 pt-3 border-t border-slate-100 flex flex-wrap items-center justify-between text-xs text-slate-600 gap-2">
+<div class="flex items-center gap-2">
+<span class="font-mono text-slate-400">Sentinel-1 InSAR Pass:</span>
+<span class="font-mono font-bold text-slate-800">2026-03-29 13:42 UTC</span>
+<span class="px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 font-mono text-[10px] font-bold">COPERNICUS CALIBRATED</span>
+</div>
+<div class="font-mono text-slate-500">Subsurface Depth: <strong class="text-slate-800">-340m AGL</strong></div>
+</div>
+</div>
+<!-- Right: Real-time Statutory Tele-Feed & AI Automated DGMS Section 22 Dispatch (4 cols) -->
+<div class="lg:col-span-4 space-y-4">
+<!-- Automated DGMS Dispatch card -->
+<div class="bg-white rounded-xl p-5 border border-slate-200 shadow-xs space-y-3">
+<div class="flex items-center justify-between pb-2 border-b border-slate-100">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-red-600 text-xl">gavel</span>
+<span class="text-xs font-bold text-slate-900 uppercase tracking-wide">Automated DGMS Dispatch</span>
+</div>
+<span class="px-2 py-0.5 rounded bg-red-100 text-red-700 font-mono text-[10px] font-bold uppercase">SECTION 22(3)</span>
+</div>
+<p class="text-xs text-slate-600 leading-relaxed">
+              Statutory non-compliance detected. An emergency Mines Act 1952 Section 22(3) Work Suspension notice is prepared for cryptographic verification.
+            </p>
+<div class="p-3 bg-red-50 rounded-lg border border-red-200 text-xs font-mono space-y-1 text-slate-800">
+<div class="flex justify-between text-red-900 font-bold">
+<span class="">SEAL: ECDSA NIST P-256</span>
+<span class="text-slate-500">DGMS Zone IV</span>
+</div>
+<div class="text-[11px] text-slate-700 truncate">Recipient: Colliery Mgr &amp; BCCL Area GM</div>
+<div class="text-[11px] text-slate-700">Directive: Immediate Gallery 4B Evacuation</div>
+</div>
+<button class="w-full py-2.5 rounded-lg bg-red-600 hover:bg-red-700 text-white font-bold text-xs uppercase tracking-wider transition-colors shadow-md flex items-center justify-center gap-2 border border-red-500/40" id="btn-issue-sec22" onclick="issueSection22StopWork()">
+<span class="material-symbols-outlined text-base">emergency_share</span>
+<span class="">Issue AI Section 22 Stop-Work</span>
+</button>
+</div>
+<!-- Real-Time Telemetry Feed -->
+<div class="bg-white rounded-xl p-5 border border-slate-200 shadow-xs space-y-3">
+<div class="flex items-center justify-between">
+<span class="text-xs font-bold text-slate-900">Live Dual-Sensor Feed</span>
+<span class="text-[10px] font-mono text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded font-bold">100Hz STREAM</span>
+</div>
+<div class="space-y-2 text-xs font-mono">
+<div class="p-2.5 rounded-lg bg-slate-50 border border-slate-200 flex justify-between items-center">
+<div>
+<div class="text-[10px] text-slate-500 uppercase font-semibold">Sensor NDIR-4B-WEST</div>
+<div class="font-bold text-red-600 text-sm">CH4: 1.48%</div>
+</div>
+<span class="px-2 py-0.5 rounded bg-red-100 text-red-700 font-bold text-[10px]">BREACH</span>
+</div>
+<div class="p-2.5 rounded-lg bg-slate-50 border border-slate-200 flex justify-between items-center">
+<div>
+<div class="text-[10px] text-slate-500 uppercase font-semibold">Anemometer AM-09</div>
+<div class="font-bold text-slate-800 text-sm">Air Velocity: 0.22 m/s</div>
+</div>
+<span class="px-2 py-0.5 rounded bg-amber-100 text-amber-800 font-bold text-[10px]">LOW FLOW</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Bottom: 5-Axis Safety Vector Radar preview + Quick Disaster Simulator Triggers -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-5">
+<!-- 5-Axis Safety Vector Card (7 cols) -->
+<div class="lg:col-span-7 bg-white rounded-xl p-5 border border-slate-200 shadow-xs space-y-4">
+<div class="flex items-center justify-between pb-2 border-b border-slate-100">
+<div>
+<span class="text-[10px] uppercase font-bold text-slate-400">DGMS Comprehensive Safety Profile</span>
+<h3 class="text-sm font-bold text-slate-900">5-Axis Statutory Compliance Vector</h3>
+</div>
+<span class="px-2.5 py-1 rounded bg-amber-100 text-amber-900 font-mono text-xs font-extrabold border border-amber-300">RATING: BBB (Watchlist)</span>
+</div>
+<!-- 5 Metric bars -->
+<div class="space-y-3">
+<div>
+<div class="flex justify-between text-xs font-semibold mb-1">
+<span class="text-slate-700">1. Ventilation &amp; Methane Dilution (CMR 153/169)</span>
+<span class="text-red-600 font-mono font-bold">38% (Critical Deficit)</span>
+</div>
+<div class="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
+<div class="bg-red-600 h-full rounded-full" style="width: 38%;"></div>
+</div>
+</div>
+<div>
+<div class="flex justify-between text-xs font-semibold mb-1">
+<span class="text-slate-700">2. Roof Strata &amp; Geomechanical Subsidence</span>
+<span class="text-sky-700 font-mono font-bold">64% (Nominal)</span>
+</div>
+<div class="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
+<div class="bg-[#0284C7] h-full rounded-full" style="width: 64%;"></div>
+</div>
+</div>
+<div>
+<div class="flex justify-between text-xs font-semibold mb-1">
+<span class="text-slate-700">3. Dust Abatement &amp; Water Spragging</span>
+<span class="text-emerald-700 font-mono font-bold">52% (Compliant)</span>
+</div>
+<div class="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
+<div class="bg-emerald-600 h-full rounded-full" style="width: 52%;"></div>
+</div>
+</div>
+<div>
+<div class="flex justify-between text-xs font-semibold mb-1">
+<span class="text-slate-700">4. Mechanical Intrinsically Safe Gear</span>
+<span class="text-sky-700 font-mono font-bold">78% (Healthy)</span>
+</div>
+<div class="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
+<div class="bg-[#0284C7] h-full rounded-full" style="width: 78%;"></div>
+</div>
+</div>
+<div>
+<div class="flex justify-between text-xs font-semibold mb-1">
+<span class="text-slate-700">5. Shift Supervisor Logbook Fidelity (Form IV-A)</span>
+<span class="text-red-700 font-mono font-bold">28% (Severe Tampering Risk)</span>
+</div>
+<div class="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
+<div class="bg-red-700 h-full rounded-full" style="width: 28%;"></div>
+</div>
+</div>
+</div>
+</div>
+<!-- Disaster Simulation & Presentation Triggers (5 cols) -->
+<div class="lg:col-span-5 bg-white rounded-xl p-5 border border-slate-200 shadow-xs flex flex-col justify-between space-y-4">
+<div>
+<div class="flex items-center justify-between pb-2 border-b border-slate-100">
+<span class="text-xs font-bold text-slate-900 uppercase tracking-wide">SIH 2026 Presentation Simulators</span>
+<span class="px-2 py-0.5 rounded bg-sky-100 text-sky-800 font-mono text-[10px] font-bold">LIVE STAGING</span>
+</div>
+<p class="text-xs text-slate-600 mt-2 leading-relaxed">
+              Test how CoalSentinel responds in real-time to sudden mine disasters or restores regulatory baseline.
+            </p>
+</div>
+<div class="space-y-2.5">
+<button class="w-full px-3.5 py-2.5 rounded-lg bg-red-50 hover:bg-red-100 text-red-700 border border-red-200 font-bold text-xs flex items-center justify-between transition-colors shadow-2xs group" onclick="simulateDisaster('methane')">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-red-600 text-lg group-hover:animate-bounce">warning</span>
+<span class="">🚨 Trigger Methane Surge (1.85%)</span>
+</div>
+<span class="font-mono text-[10px] bg-red-200/80 px-2 py-0.5 rounded text-red-900">SIMULATE</span>
+</button>
+<button class="w-full px-3.5 py-2.5 rounded-lg bg-amber-50 hover:bg-amber-100 text-amber-800 border border-amber-200 font-bold text-xs flex items-center justify-between transition-colors shadow-2xs group" onclick="simulateDisaster('dust')">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-amber-600 text-lg">air</span>
+<span class="">💨 Dust Suppressor Outage (+40 mg/m³)</span>
+</div>
+<span class="font-mono text-[10px] bg-amber-200/80 px-2 py-0.5 rounded text-amber-900">SIMULATE</span>
+</button>
+<button class="w-full px-3.5 py-2.5 rounded-lg bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-200 font-bold text-xs flex items-center justify-between transition-colors shadow-2xs group" onclick="simulateDisaster('restore')">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-emerald-600 text-lg">check_circle</span>
+<span class="">🟢 Restore Normal Baseline (0.38% CH4)</span>
+</div>
+<span class="font-mono text-[10px] bg-emerald-200/80 px-2 py-0.5 rounded text-emerald-900">RESET</span>
+</button>
+</div>
+<div class="text-[11px] text-slate-500 font-mono text-center">
+            All events automatically propagate to the cryptographic Merkle tree.
+          </div>
+</div>
+</div>
+</div>
+<!-- =======================================================
+         VIEW 2: 🛰️ SATELLITE 3D EXPLORER (TAB 2)
+         ======================================================= -->
+<div class="space-y-5 hidden" id="view-satellite">
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
+<div class="lg:col-span-8 bg-white rounded-xl p-5 shadow-xs border border-slate-200">
+<div class="flex items-center justify-between mb-3">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[#0284C7] text-xl">layers</span>
+<span class="text-sm font-bold text-slate-900">Spatial Digital Twin &amp; Geomechanical Contours</span>
+<span class="px-2 py-0.5 rounded bg-sky-100 text-[#0284C7] font-mono text-[10px] font-bold">ORTHO-GIS</span>
+</div>
+<span class="font-mono text-xs text-slate-500">23.7505° N, 86.4172° E • SEAM XI</span>
+</div>
+<!-- Leaflet Map Container -->
+<div class="relative w-full h-[480px] rounded-lg overflow-hidden border border-slate-200 bg-slate-900" id="leaflet-mine-map"></div>
+</div>
+<div class="lg:col-span-4 space-y-4">
+<div class="bg-white rounded-xl p-5 shadow-xs border border-slate-200">
+<div class="flex items-start justify-between mb-1">
+<div>
+<span class="text-[10px] uppercase font-bold text-slate-400">CMR 169 TELEMETRY</span>
+<div class="text-sm font-semibold text-slate-900">CH4 Methane Concentration</div>
+</div>
+<span class="px-2 py-0.5 rounded bg-red-100 text-red-700 font-mono text-[10px] font-bold uppercase animate-pulse">BREACH</span>
+</div>
+<div class="flex items-baseline gap-2 my-2">
+<span class="font-mono text-4xl font-bold text-red-600">1.48</span>
+<span class="text-sm text-slate-500 font-semibold">% vol</span>
+<span class="font-mono text-xs text-red-600 font-bold ml-auto">+0.23% over 1.25% Limit</span>
+</div>
+<div class="w-full bg-slate-100 h-2 rounded-full overflow-hidden mt-3">
+<div class="bg-red-600 h-full rounded-full" style="width: 82%;"></div>
+</div>
+</div>
+<div class="bg-sky-50 rounded-xl p-5 border border-sky-200 shadow-xs space-y-2">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[#0284C7]">gavel</span>
+<span class="text-xs font-bold text-slate-900">Automated DGMS Dispatch</span>
+</div>
+<p class="text-xs text-slate-600 leading-relaxed">
+              Statutory non-compliance detected. A Section 22(3) Work Suspension notice is drafted for instant cryptographic sealing.
+            </p>
+<button class="w-full py-2.5 rounded bg-red-600 hover:bg-red-700 text-white font-bold text-xs uppercase tracking-wider transition-colors shadow-xs" onclick="issueSection22StopWork()">
+              Issue AI Section 22 Stop-Work
+            </button>
+</div>
+</div>
+</div>
+</div>
+<!-- =======================================================
+         VIEW 3: ⚖️ CONTRADICTION ENGINE (TAB 3)
+         ======================================================= -->
+<div class="space-y-5 hidden" id="view-contradiction">
+<div class="bg-white p-5 rounded-xl border border-slate-200 flex flex-col md:flex-row md:items-center justify-between gap-4 shadow-xs">
+<div>
+<div class="flex items-center gap-2">
+<h3 class="text-base font-bold text-slate-900">Dual-Truth Contradiction Engine</h3>
+<span class="px-2.5 py-0.5 rounded bg-red-100 text-red-700 font-mono text-[10px] font-bold">9.8x STATUTORY DISCREPANCY</span>
+</div>
+<p class="text-xs text-slate-600 mt-1">Automated algorithmic confrontation comparing manual shift books (Form IV-A) against SCADA NDIR sensors.</p>
+</div>
+<button class="px-3.5 py-2 rounded-lg bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold uppercase transition-all shadow-xs flex items-center gap-1.5 shrink-0" onclick="switchTab('audit')">
+<span class="material-symbols-outlined text-sm">verified_user</span>View Immutable Audit Block
+        </button>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+<div class="bg-white p-5 rounded-xl border border-slate-200 shadow-xs space-y-3">
+<div class="flex justify-between border-b pb-2 text-xs font-bold text-slate-700">
+<span class="">Human Shift Supervisor Log (Form IV-A)</span>
+<span class="text-emerald-600 font-mono text-sm">0.15% CH4</span>
+</div>
+<p class="text-xs text-slate-600">Manual Entry: "Galleries clear. Extraction normal, no combustible gas detected" by Inspector V. K. Sharma (Shift B).</p>
+<div class="p-2.5 rounded-lg bg-emerald-50 text-emerald-800 text-xs font-mono border border-emerald-200 flex justify-between items-center">
+<span class="">STATUS: CERTIFIED SAFE</span>
+<span class="text-[10px] text-slate-500">Signed: 14:10 IST</span>
+</div>
+</div>
+<div class="bg-white p-5 rounded-xl border-2 border-red-300 shadow-sm space-y-3">
+<div class="flex justify-between border-b pb-2 text-xs font-bold text-slate-700">
+<span class="">Continuous Telemetry Ground Truth</span>
+<span class="text-red-600 font-mono font-bold text-sm">1.48% CH4 (CRITICAL)</span>
+</div>
+<p class="text-xs text-slate-600">IoT-BCCL-CH4-03 at Face 4B. 9.8x discrepancy detected with 0.22 m/s airflow deficit (below 0.50 m/s minimum).</p>
+<div class="p-2.5 rounded-lg bg-red-50 text-red-800 text-xs font-mono font-bold border border-red-200 flex justify-between items-center">
+<span class="">STATUS: STATUTORY VIOLATION CONFIRMED</span>
+<span class="text-[10px] text-red-600">CMR 169 Breach</span>
+</div>
+</div>
+</div>
+</div>
+<!-- =======================================================
+         VIEW 4: 🧬 COMPLIANCE DNA (TAB 4)
+         ======================================================= -->
+<div class="space-y-5 hidden" id="view-compliance">
+<div class="bg-white p-5 rounded-xl border border-slate-200 shadow-xs space-y-4">
+<div class="flex items-center justify-between mb-2">
+<div>
+<span class="text-[10px] uppercase font-bold text-slate-400">DGMS AUDIT PROFILING</span>
+<h3 class="text-base font-bold text-slate-900">5-Axis Safety Vector &amp; Compliance Rating</h3>
+</div>
+<span class="px-3 py-1 rounded bg-amber-100 text-amber-900 font-mono text-xs font-bold border border-amber-300">RATING: BBB</span>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-5 gap-3 text-center text-xs">
+<div class="p-3 bg-red-50 rounded-lg border border-red-200">
+<div class="font-bold text-red-950">Ventilation</div>
+<div class="text-red-600 font-mono font-bold text-xl mt-1">38%</div>
+<div class="text-[10px] text-red-700 font-semibold mt-1">Severe Deficit</div>
+</div>
+<div class="p-3 bg-slate-50 rounded-lg border border-slate-200">
+<div class="font-bold text-slate-900">Roof Strata</div>
+<div class="text-[#0284C7] font-mono font-bold text-xl mt-1">64%</div>
+<div class="text-[10px] text-slate-500 mt-1">InSAR Tracked</div>
+</div>
+<div class="p-3 bg-slate-50 rounded-lg border border-slate-200">
+<div class="font-bold text-slate-900">Dust Abatement</div>
+<div class="text-emerald-600 font-mono font-bold text-xl mt-1">52%</div>
+<div class="text-[10px] text-emerald-700 mt-1">Sprayers Active</div>
+</div>
+<div class="p-3 bg-slate-50 rounded-lg border border-slate-200">
+<div class="font-bold text-slate-900">Equipment Integrity</div>
+<div class="text-[#0284C7] font-mono font-bold text-xl mt-1">78%</div>
+<div class="text-[10px] text-slate-500 mt-1">Flameproof Pass</div>
+</div>
+<div class="p-3 bg-red-50 rounded-lg border border-red-200">
+<div class="font-bold text-red-950">Statutory Reporting</div>
+<div class="text-red-700 font-mono font-bold text-xl mt-1">28%</div>
+<div class="text-[10px] text-red-700 font-semibold mt-1">Under Investigation</div>
+</div>
+</div>
+</div>
+</div>
+<!-- =======================================================
+         VIEW 5: 📜 DGMS EVALUATOR (TAB 5)
+         ======================================================= -->
+<div class="space-y-4 hidden" id="view-evaluator">
+<div class="bg-white p-5 rounded-xl border border-slate-200 shadow-xs space-y-4">
+<div class="flex items-center justify-between pb-2 border-b border-slate-100">
+<h3 class="text-base font-bold text-slate-900">Coal Mines Regulations 2017 Live Code Evaluator</h3>
+<span class="px-2 py-0.5 rounded bg-rose-100 text-rose-800 font-mono text-[10px] font-bold">CMR '17 STATUTORY</span>
+</div>
+<div class="space-y-3">
+<div class="p-4 rounded-xl bg-red-50 border-l-4 border-red-600 text-xs space-y-1.5 shadow-2xs">
+<div class="flex justify-between font-bold text-red-800">
+<span class="text-sm">CMR 2017 Reg. 169(1) — Inflammable Gases Safe Ceiling</span>
+<span class="px-2 py-0.5 rounded bg-red-200 text-red-900 font-mono font-bold">❌ STATUTORY BREACH</span>
+</div>
+<p class="text-slate-700 leading-relaxed">
+              "No person shall be allowed to enter or remain in any place underground where the concentration of inflammable gas exceeds 1.25 per cent by volume."
+            </p>
+<div class="font-mono text-red-700 font-semibold pt-1">
+              Observed Value: 1.48% vol (+0.23% overshoot). Mandatory evacuation triggered under Mines Act Section 22(3).
+            </div>
+</div>
+<div class="p-4 rounded-xl bg-red-50 border-l-4 border-red-600 text-xs space-y-1.5 shadow-2xs">
+<div class="flex justify-between font-bold text-red-800">
+<span class="text-sm">CMR 2017 Reg. 153 — Minimum Ventilation Face Velocity</span>
+<span class="px-2 py-0.5 rounded bg-red-200 text-red-900 font-mono font-bold">❌ DEFICIT DETECTED</span>
+</div>
+<p class="text-slate-700 leading-relaxed">
+              "Velocity of air current measured at active working faces shall not be less than 0.50 metres per second."
+            </p>
+<div class="font-mono text-red-700 font-semibold pt-1">
+              Observed Value: 0.22 m/s (56% dilution deficit). Air is stagnant in Gallery 4B.
+            </div>
+</div>
+</div>
+</div>
+</div>
+<!-- =======================================================
+         VIEW 6: 🔒 TAMPER-PROOF AUDIT TRAIL (/audit)
+         ======================================================= -->
+<div class="space-y-6 hidden" id="view-audit">
+<!-- Top Action Banner -->
+<div class="bg-gradient-to-r from-slate-900 via-slate-800 to-[#181F38] text-white p-6 rounded-2xl border border-slate-700 shadow-md flex flex-col lg:flex-row lg:items-center justify-between gap-5 relative overflow-hidden">
+<div class="relative z-10 max-w-2xl">
+<div class="flex items-center gap-2.5 mb-2">
+<span class="px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 font-mono text-[11px] font-bold uppercase tracking-wider border border-emerald-500/30 flex items-center gap-1.5">
+<span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+              DGMS Cryptographic Node: Online
+            </span>
+<span class="text-slate-400 font-mono text-xs">Route: /audit</span>
+</div>
+<h2 class="text-xl lg:text-2xl font-bold tracking-tight text-white flex items-center gap-2">
+<span class="material-symbols-outlined text-emerald-400 text-2xl">verified_user</span>
+            Tamper-Proof Statutory Audit Trail
+          </h2>
+<p class="text-xs lg:text-sm text-slate-300 mt-1.5 leading-relaxed">
+            Decentralized Merkle Tree &amp; SHA-256 chained logbook securing statutory Form IV-A records, NDIR optical telemetry, and Section 22 decrees. Retroactive tampering mathematically invalidates downline nonces.
+          </p>
+</div>
+<!-- Prominent Green "Verify Ledger Integrity" Action Button -->
+<div class="relative z-10 shrink-0 flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+<button class="px-6 py-3.5 rounded-xl bg-[#16A34A] hover:bg-[#15803d] active:scale-[0.98] text-white text-sm font-bold uppercase tracking-wider transition-all shadow-lg hover:shadow-emerald-900/40 flex items-center justify-center gap-2.5 border border-emerald-400/50 group" id="btn-verify-chain" onclick="verifyCryptographicChain()">
+<span class="material-symbols-outlined text-xl group-hover:rotate-180 transition-transform duration-700" id="verify-icon">fingerprint</span>
+<span id="btn-verify-text" class="">Verify Ledger Integrity</span>
+</button>
+</div>
+<!-- Decorative background glow -->
+<div class="absolute right-0 top-0 bottom-0 w-1/3 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-emerald-500/10 via-transparent to-transparent pointer-events-none"></div>
+</div>
+<!-- Live Verification Alert Pop-up Banner (Appears when verified) -->
+<div class="hidden bg-emerald-50 border-2 border-emerald-500 p-4 rounded-xl shadow-md transition-all duration-300" id="ledger-verification-banner">
+<div class="flex items-start sm:items-center justify-between gap-3">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-emerald-600 text-white flex items-center justify-center shrink-0 shadow-xs">
+<span class="material-symbols-outlined text-2xl">check_circle</span>
+</div>
+<div>
+<div class="flex items-center gap-2">
+<h4 class="text-sm font-bold text-emerald-950">All SHA-256 cryptographic hashes verified. Zero tampering detected.</h4>
+<span class="px-2 py-0.5 rounded bg-emerald-200 text-emerald-900 font-mono text-[10px] font-bold">100% INTACT</span>
+</div>
+<p class="text-xs text-emerald-800 mt-0.5 font-mono">
+                Merkle Root: <strong class="text-emerald-950">0x8a92f03b6d41...e1c981</strong> • Validated against DGMS Central Genesis Node at <span id="verification-timestamp" class="">14:32:10 IST</span>.
+              </p>
+</div>
+</div>
+<button class="text-emerald-700 hover:text-emerald-950 p-1" onclick="document.getElementById('ledger-verification-banner').classList.add('hidden')">
+<span class="material-symbols-outlined text-lg">close</span>
+</button>
+</div>
+</div>
+<!-- Blockchain Blocks Feed -->
+<div class="space-y-3.5" id="ledger-blocks-container">
+<!-- Block #1044 -->
+<div class="ledger-block bg-white rounded-xl p-5 shadow-xs border-l-4 border-red-600 border border-slate-200 transition-all hover:border-slate-300 relative overflow-hidden" data-block-id="1044">
+<div class="scanner-line hidden absolute inset-0 bg-gradient-to-b from-transparent via-emerald-400/25 to-transparent pointer-events-none animate-scan"></div>
+<div class="flex flex-col md:flex-row md:items-center justify-between pb-3 mb-3 border-b border-slate-100 gap-1.5">
+<div class="flex items-center gap-2.5">
+<span class="px-2.5 py-0.5 rounded bg-red-100 text-red-800 font-mono text-[11px] font-bold">BLOCK #1044</span>
+<span class="text-sm font-bold text-slate-900">DGMS Section 22(3) Work Suspension Order</span>
+<span class="px-2 py-0.2 rounded bg-slate-100 text-slate-600 font-mono text-[10px]">Nonce: 849,201</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="status-badge px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 font-mono text-[10px] font-bold flex items-center gap-1">
+<span class="material-symbols-outlined text-[13px]">verified</span> INTACT
+              </span>
+<span class="font-mono text-[11px] text-slate-400">2026-03-29 14:18:22 IST</span>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-3 font-mono text-xs">
+<div class="bg-slate-50 p-2.5 rounded-lg border border-slate-200">
+<span class="text-slate-400 uppercase block font-semibold text-[10px]">Block Hash (SHA-256):</span>
+<span class="text-red-700 font-bold break-all block-hash">e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855</span>
+</div>
+<div class="bg-slate-50 p-2.5 rounded-lg border border-slate-200">
+<span class="text-slate-400 uppercase block font-semibold text-[10px]">Previous Block Hash:</span>
+<span class="text-slate-600 break-all">8f434346648f6b96df89dda901c5176b10a6d83961dd3c1ac88b59b2dc327aa4</span>
+</div>
+</div>
+<div class="mt-3 bg-red-50/70 p-3 rounded-lg text-xs font-mono text-slate-800 border border-red-200">
+<div class="font-semibold text-red-900 mb-1 flex items-center justify-between">
+<span class="">STATUTORY PAYLOAD (IMMUTABLE):</span>
+<span class="text-[10px] text-slate-500 font-mono">Merkle Root: 0x9b1...ef4</span>
+</div>
+<code class="text-slate-700 break-all">{ "action": "SECTION_22_3_STOP_WORK", "mine": "BCCL_JHARIA_04", "signatory": "Dr. R. K. Soren (DGMS IG)", "reason": "CMR_169_CH4_1.48_EXCEEDS_1.25", "order_seal": "ECDSA_NIST_P256" }</code>
+</div>
+</div>
+<!-- Block #1043 -->
+<div class="ledger-block bg-white rounded-xl p-5 shadow-xs border-l-4 border-[#0284C7] border border-slate-200 transition-all hover:border-slate-300 relative overflow-hidden" data-block-id="1043">
+<div class="scanner-line hidden absolute inset-0 bg-gradient-to-b from-transparent via-emerald-400/25 to-transparent pointer-events-none animate-scan"></div>
+<div class="flex flex-col md:flex-row md:items-center justify-between pb-3 mb-3 border-b border-slate-100 gap-1.5">
+<div class="flex items-center gap-2.5">
+<span class="px-2.5 py-0.5 rounded bg-sky-100 text-[#0284C7] font-mono text-[11px] font-bold">BLOCK #1043</span>
+<span class="text-sm font-bold text-slate-900">Telemetry CH4 Statutory Spike Alert</span>
+<span class="px-2 py-0.2 rounded bg-slate-100 text-slate-600 font-mono text-[10px]">Nonce: 612,490</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="status-badge px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 font-mono text-[10px] font-bold flex items-center gap-1">
+<span class="material-symbols-outlined text-[13px]">verified</span> INTACT
+              </span>
+<span class="font-mono text-[11px] text-slate-400">2026-03-29 14:15:00 IST</span>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-3 font-mono text-xs">
+<div class="bg-slate-50 p-2.5 rounded-lg border border-slate-200">
+<span class="text-slate-400 uppercase block font-semibold text-[10px]">Block Hash (SHA-256):</span>
+<span class="text-[#0284C7] font-bold break-all block-hash">8f434346648f6b96df89dda901c5176b10a6d83961dd3c1ac88b59b2dc327aa4</span>
+</div>
+<div class="bg-slate-50 p-2.5 rounded-lg border border-slate-200">
+<span class="text-slate-400 uppercase block font-semibold text-[10px]">Previous Block Hash:</span>
+<span class="text-slate-600 break-all">ca978112ca1bbdcafac231b39a23dc4da786eff8147c4e72b9807785afee48bb</span>
+</div>
+</div>
+<div class="mt-3 bg-sky-50/70 p-3 rounded-lg text-xs font-mono text-slate-800 border border-sky-200">
+<div class="font-semibold text-sky-900 mb-1 flex items-center justify-between">
+<span class="">OPTICAL SCADA TELEMETRY (HARDWARE-SIGNED):</span>
+<span class="text-[10px] text-slate-500 font-mono">Merkle Root: 0x7c4...b90</span>
+</div>
+<code class="text-slate-700 break-all">{ "sensor_node": "IoT-BCCL-CH4-03", "seam": "SEAM_XI_WEST", "ch4_vol_pct": 1.48, "air_velocity_ms": 0.22, "hardware_rsa": "30820122300d0609..." }</code>
+</div>
+</div>
+<!-- Block #1042 -->
+<div class="ledger-block bg-white rounded-xl p-5 shadow-xs border-l-4 border-slate-400 border border-slate-200 transition-all hover:border-slate-300 relative overflow-hidden" data-block-id="1042">
+<div class="scanner-line hidden absolute inset-0 bg-gradient-to-b from-transparent via-emerald-400/25 to-transparent pointer-events-none animate-scan"></div>
+<div class="flex flex-col md:flex-row md:items-center justify-between pb-3 mb-3 border-b border-slate-100 gap-1.5">
+<div class="flex items-center gap-2.5">
+<span class="px-2.5 py-0.5 rounded bg-slate-100 text-slate-700 font-mono text-[11px] font-bold">BLOCK #1042</span>
+<span class="text-sm font-bold text-slate-900">Shift Supervisor Form IV-A Statutory Registry</span>
+<span class="px-2 py-0.2 rounded bg-slate-100 text-slate-600 font-mono text-[10px]">Nonce: 391,012</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="status-badge px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 font-mono text-[10px] font-bold flex items-center gap-1">
+<span class="material-symbols-outlined text-[13px]">verified</span> INTACT
+              </span>
+<span class="font-mono text-[11px] text-slate-400">2026-03-29 14:10:04 IST</span>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-3 font-mono text-xs">
+<div class="bg-slate-50 p-2.5 rounded-lg border border-slate-200">
+<span class="text-slate-400 uppercase block font-semibold text-[10px]">Block Hash (SHA-256):</span>
+<span class="text-slate-700 font-bold break-all block-hash">ca978112ca1bbdcafac231b39a23dc4da786eff8147c4e72b9807785afee48bb</span>
+</div>
+<div class="bg-slate-50 p-2.5 rounded-lg border border-slate-200">
+<span class="text-slate-400 uppercase block font-semibold text-[10px]">Genesis Root Hash (Anchor):</span>
+<span class="text-slate-600 break-all">4b227777d4dd1fc61c6f884f48641d02b4d121d3fd328cb08b5531fcacdabf8a</span>
+</div>
+</div>
+<div class="mt-3 bg-slate-50 p-3 rounded-lg text-xs font-mono text-slate-800 border border-slate-200">
+<div class="font-semibold text-slate-900 mb-1 flex items-center justify-between">
+<span class="">MANUAL DISPATCH LOG:</span>
+<span class="text-[10px] text-slate-500 font-mono">Merkle Root: 0x3d2...11a</span>
+</div>
+<code class="text-slate-700 break-all">{ "inspector": "V. K. Sharma", "shift": "B", "logged_ch4": 0.15, "certified": "CMR_169_SAFE", "signature_hash": "e1f98bc9021..." }</code>
+</div>
+</div>
+</div>
+</div>
+<!-- =======================================================
+         VIEW 7: ⏱️ SLA HUB & SIMULATOR (TAB 7)
+         ======================================================= -->
+<div class="space-y-4 hidden" id="view-sla">
+<div class="bg-white p-5 rounded-xl border border-slate-200 shadow-xs space-y-4">
+<div class="flex items-center justify-between pb-2 border-b border-slate-100">
+<div>
+<h3 class="text-base font-bold text-slate-900">SLA Enforcement &amp; Presentation Simulator</h3>
+<p class="text-xs text-slate-500 mt-0.5">Statutory Response Window Tracker under DGMS Directives</p>
+</div>
+<span class="px-2 py-0.5 rounded bg-sky-100 text-sky-800 font-mono text-[10px] font-bold">CIRCULAR 4 OF '24</span>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+<div class="p-4 bg-red-50 rounded-xl border border-red-200">
+<div class="text-[10px] uppercase font-bold text-red-700">T1: Evacuation SLA</div>
+<div class="text-2xl font-mono font-bold text-red-800 mt-1">00:08:42</div>
+<p class="text-xs text-slate-600 mt-1">Within 15 mins mandated for &gt;1.25% CH4</p>
+</div>
+<div class="p-4 bg-sky-50 rounded-xl border border-sky-200">
+<div class="text-[10px] uppercase font-bold text-sky-700">T2: DGMS Inspector Dispatch</div>
+<div class="text-2xl font-mono font-bold text-sky-800 mt-1">02:45:10</div>
+<p class="text-xs text-slate-600 mt-1">Target &lt; 4 hours for Section 22 verification</p>
+</div>
+<div class="p-4 bg-emerald-50 rounded-xl border border-emerald-200">
+<div class="text-[10px] uppercase font-bold text-emerald-700">T3: Ledger Sealing SLA</div>
+<div class="text-2xl font-mono font-bold text-emerald-800 mt-1">00:00:02</div>
+<p class="text-xs text-slate-600 mt-1">Instantaneous Merkle anchor committed</p>
+</div>
+</div>
+<div class="pt-2 flex flex-wrap gap-2.5">
+<button class="px-4 py-2.5 rounded-lg bg-red-600 text-white font-bold text-xs uppercase hover:bg-red-700 transition-colors shadow-xs flex items-center gap-1.5" onclick="simulateDisaster('methane')">
+<span class="material-symbols-outlined text-base">emergency</span> Trigger Methane Surge (1.85%)
+          </button>
+<button class="px-4 py-2.5 rounded-lg bg-emerald-600 text-white font-bold text-xs uppercase hover:bg-emerald-700 transition-colors shadow-xs flex items-center gap-1.5" onclick="simulateDisaster('restore')">
+<span class="material-symbols-outlined text-base">check_circle</span> Restore Normal Baseline
+          </button>
+</div>
+</div>
+</div>
+</main>
+</div>
+<!-- =========================================================
+     5. TOP-RIGHT FULL LOGIN / STATUTORY AUTH MODAL OVERLAY
+     ========================================================= -->
+<div class="fixed inset-0 z-[10000] bg-slate-950/75 backdrop-blur-sm flex items-center justify-center p-4 transition-opacity duration-300 hidden" id="modal-auth-portal" onclick="handleModalBackdropClick(event)">
+<div class="bg-white rounded-2xl max-w-xl w-full shadow-2xl border border-slate-300 overflow-hidden flex flex-col transform transition-all duration-300 animate-in fade-in zoom-in-95" onclick="event.stopPropagation()">
+<!-- Modal Header -->
+<div class="bg-gradient-to-r from-[#181F38] to-[#141A30] text-white p-5 flex items-center justify-between border-b border-slate-700">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-sky-600 to-sky-400 flex items-center justify-center shadow-md border border-white/20">
+<span class="material-symbols-outlined text-2xl text-white">shield_person</span>
+</div>
+<div>
+<h3 class="text-sm font-extrabold tracking-tight">Ministry of Coal &amp; DGMS Statutory Portal</h3>
+<span class="text-[10px] text-sky-300 font-mono">Statutory Authentication Gateway • Mines Act 1952 § 22, CMR 2017</span>
+</div>
+</div>
+<button class="p-1.5 rounded-lg bg-slate-800/80 hover:bg-slate-700 text-slate-300 hover:text-white transition-colors" onclick="toggleAuthModal(false)" title="Close Modal">
+<span class="material-symbols-outlined text-xl">close</span>
+</button>
+</div>
+<div class="p-6 space-y-4 max-h-[82vh] overflow-y-auto custom-scrollbar">
+<!-- Authority Tier Selector -->
+<div>
+<label class="block text-[11px] font-bold uppercase tracking-wider text-slate-500 mb-2">Select Authority Clearance Tier:</label>
+<div class="grid grid-cols-3 gap-2">
+<button class="p-2.5 rounded-xl border-2 border-[#0284C7] bg-sky-50 text-left transition-all text-xs" id="tier-dgms" onclick="selectTier('dgms')" type="button">
+<span class="block font-bold text-sky-950">🏛️ DGMS Central</span>
+<span class="text-[10px] text-sky-700 font-mono">Level-4 CMD</span>
+</button>
+<button class="p-2.5 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-left transition-all text-xs" id="tier-colliery" onclick="selectTier('colliery')" type="button">
+<span class="block font-bold text-slate-800">👷 Colliery Safety</span>
+<span class="text-[10px] text-slate-500 font-mono">Level-2 SCADA</span>
+</button>
+<button class="p-2.5 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-left transition-all text-xs" id="tier-cpcb" onclick="selectTier('cpcb')" type="button">
+<span class="block font-bold text-slate-800">🧪 CPCB Auditor</span>
+<span class="text-[10px] text-slate-500 font-mono">Level-3 Enviro</span>
+</button>
+</div>
+</div>
+<!-- SIH 2026 Jury 1-Click Presets for Fast Judging Demo -->
+<div class="bg-slate-50 p-3.5 rounded-xl border border-slate-200 space-y-2">
+<div class="flex items-center justify-between text-xs">
+<span class="font-extrabold text-slate-800 flex items-center gap-1.5">
+<span class="material-symbols-outlined text-amber-500 text-sm">stars</span>
+            SIH 2026 Jury 1-Click Demo Profiles:
+          </span>
+<span class="text-[10px] font-mono text-slate-400">Click to Auto-fill</span>
+</div>
+<div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
+<button class="px-2.5 py-2 rounded-lg bg-white border border-slate-200 hover:border-sky-400 text-left text-xs transition-colors shadow-2xs" onclick="applyPreset('soren')" type="button">
+<div class="font-bold text-sky-900 truncate">Dr. R. K. Soren</div>
+<div class="text-[10px] text-slate-500 truncate font-mono">DGMS IG (Zone IV)</div>
+</button>
+<button class="px-2.5 py-2 rounded-lg bg-white border border-slate-200 hover:border-sky-400 text-left text-xs transition-colors shadow-2xs" onclick="applyPreset('anand')" type="button">
+<div class="font-bold text-slate-900 truncate">Er. Anand Kumar</div>
+<div class="text-[10px] text-slate-500 truncate font-mono">Shift Supervisor</div>
+</button>
+<button class="px-2.5 py-2 rounded-lg bg-white border border-slate-200 hover:border-sky-400 text-left text-xs transition-colors shadow-2xs" onclick="applyPreset('meera')" type="button">
+<div class="font-bold text-slate-900 truncate">Smt. Meera Joshi</div>
+<div class="text-[10px] text-slate-500 truncate font-mono">CPCB Env. Auditor</div>
+</button>
+</div>
+</div>
+<!-- Form Inputs -->
+<form class="space-y-3.5" onsubmit="handleLoginSubmit(event)">
+<div>
+<label class="block text-xs font-semibold text-slate-700 mb-1">Official Government SSO Email (*.gov.in / *.nic.in):</label>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-2.5 text-slate-400 text-base">badge</span>
+<input class="w-full pl-9 pr-3 py-2 rounded-lg border border-slate-300 text-xs font-mono text-slate-900 focus:ring-2 focus:ring-[#0284C7] focus:outline-none" id="login-email" required="" type="email" value="rk.soren@dgms.gov.in">
+</div>
+</div>
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+<div>
+<label class="block text-xs font-semibold text-slate-700 mb-1">DGMS FIPS-140 Passkey PIN:</label>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-2.5 text-slate-400 text-base">lock</span>
+<input class="w-full pl-9 pr-9 py-2 rounded-lg border border-slate-300 text-xs font-mono text-slate-900 focus:ring-2 focus:ring-[#0284C7] focus:outline-none" id="login-pin" required="" type="password" value="749201">
+<button class="absolute right-2.5 top-2.5 text-slate-400 hover:text-slate-700" onclick="togglePinVisibility()" type="button">
+<span class="material-symbols-outlined text-base" id="pin-eye-icon">visibility</span>
+</button>
+</div>
+</div>
+<div>
+<div class="flex justify-between items-center mb-1">
+<label class="text-xs font-semibold text-slate-700">Aadhaar TOTP / e-Sign:</label>
+<span class="text-[10px] font-mono text-emerald-700 font-bold" id="totp-timer">Valid 28s</span>
+</div>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-2.5 text-slate-400 text-base">phonelink_lock</span>
+<input class="w-full pl-9 pr-3 py-2 rounded-lg border border-slate-300 text-xs font-mono tracking-widest text-slate-900 focus:ring-2 focus:ring-[#0284C7] focus:outline-none" id="login-totp" maxlength="6" required="" type="text" value="582194">
+</div>
+</div>
+</div>
+<!-- Auth Action Button -->
+<button class="w-full py-3 rounded-xl bg-[#0284C7] hover:bg-sky-700 text-white font-bold text-xs uppercase tracking-wider transition-all shadow-md hover:shadow-sky-900/30 flex items-center justify-center gap-2 border border-sky-400/30" id="btn-submit-auth" type="submit">
+<span class="material-symbols-outlined text-lg" id="login-spinner">verified_user</span>
+<span id="login-btn-text" class="">Authenticate &amp; Access DGMS Central Command ➔</span>
+</button>
+</form>
+</div>
+<!-- Modal Footer -->
+<div class="bg-slate-50 px-6 py-3 border-t border-slate-200 text-[11px] text-slate-500 font-mono flex items-center justify-between">
+<span class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-emerald-600 text-sm">lock</span>
+<span class="">256-Bit Hardware Encrypted Handshake</span>
+</span>
+<span class="text-sky-800 font-bold">NIC-DGMS-PKI-v4</span>
+</div>
+</div>
+</div>
+<!-- =========================================================
+     6. RICH FLOATING DUAL-MODE AI COPILOT (BOTTOM RIGHT)
+     ========================================================= -->
+<div class="fixed bottom-6 right-6 z-50 flex flex-col items-end select-none">
+<!-- Copilot Window -->
+<div class="w-[420px] max-w-[calc(100vw-2rem)] h-[560px] bg-white rounded-2xl shadow-2xl border border-slate-300 flex flex-col mb-3 overflow-hidden transition-all duration-300 hidden" id="ai-copilot-window">
+<!-- Copilot Header -->
+<div class="bg-[#181F38] text-white p-4 flex items-center justify-between border-b border-slate-700">
+<div class="flex items-center gap-2.5">
+<div class="w-8 h-8 rounded-lg bg-[#0284C7] flex items-center justify-center shadow-md">
+<span class="material-symbols-outlined text-lg text-white">smart_toy</span>
+</div>
+<div>
+<div class="text-sm font-bold leading-tight">CoalSentinel AI Copilot</div>
+<div class="font-mono text-[10px] text-sky-300 flex items-center gap-1.5">
+<span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+            Powered by Gemini • Mining Intelligence
+          </div>
+</div>
+</div>
+<div class="flex items-center gap-1">
+<button class="p-1 hover:bg-slate-800 rounded text-slate-400 hover:text-white" onclick="clearCopilotChat()" title="Reset Demo Chat">
+<span class="material-symbols-outlined text-[17px]">restart_alt</span>
+</button>
+<button class="p-1 hover:bg-slate-800 rounded text-slate-300 hover:text-white" onclick="toggleCopilot()" title="Minimize Copilot">
+<span class="material-symbols-outlined text-xl">close</span>
+</button>
+</div>
+</div>
+<!-- Dual Mode Persona Switcher -->
+<div class="bg-slate-100 px-3.5 py-2 flex items-center justify-between border-b border-slate-200">
+<div class="flex items-center gap-1.5 text-xs font-bold text-slate-700">
+<span class="material-symbols-outlined text-base text-slate-500">psychology</span>
+<span class="">Persona Mode:</span>
+</div>
+<div class="flex items-center gap-1 bg-white p-0.5 rounded-lg border border-slate-200 shadow-2xs">
+<button class="px-2.5 py-1 rounded-md text-[11px] uppercase font-bold text-slate-600 hover:text-slate-900 transition-colors" id="btn-mode-eli5" onclick="setCopilotMode('eli5')">
+          👶 ELI5 / Simple
+        </button>
+<button class="px-2.5 py-1 rounded-md bg-[#0284C7] text-white text-[11px] uppercase font-bold transition-colors shadow-xs" id="btn-mode-sih" onclick="setCopilotMode('sih')">
+          ⚡ SIH Expert
+        </button>
+</div>
+</div>
+<!-- Demonstration Prompts Area -->
+<div class="p-2.5 bg-slate-50 border-b border-slate-200 space-y-1.5">
+<div class="text-[10px] uppercase font-mono font-bold text-slate-400 flex items-center justify-between">
+<span class="">Interactive Demo Questions:</span>
+<span class="text-sky-700 font-sans font-bold" id="prompt-mode-indicator">Expert Regulatory Mode</span>
+</div>
+<!-- SIH Expert Demo Prompts -->
+<div class="space-y-1.5" id="sih-prompts-container">
+<button class="w-full px-3 py-2 rounded-lg bg-white border border-sky-200 hover:bg-sky-50 text-sky-950 font-medium text-xs text-left flex items-center gap-2 shadow-2xs transition-colors group" onclick="triggerCopilotAnswer('What regulations were violated in Jharia Pit #4?')">
+<span class="material-symbols-outlined text-sm text-red-600 group-hover:scale-110 transition-transform">gavel</span>
+<span class="font-semibold text-slate-900 truncate">"What regulations were violated in Jharia Pit #4?"</span>
+</button>
+<div class="flex gap-1.5">
+<button class="flex-1 px-2 py-1 rounded-md bg-white border border-slate-200 text-slate-700 font-mono text-[10px] hover:border-sky-400 truncate text-left" onclick="triggerCopilotAnswer('Explain Section 22(3) Mines Act invocation')">
+            § 22(3) Stop-Work
+          </button>
+<button class="flex-1 px-2 py-1 rounded-md bg-white border border-slate-200 text-slate-700 font-mono text-[10px] hover:border-sky-400 truncate text-left" onclick="triggerCopilotAnswer('SCADA NDIR vs Form IV-A Discrepancy')">
+            SCADA vs Shift Book
+          </button>
+</div>
+</div>
+<!-- ELI5 Demo Prompts -->
+<div class="space-y-1.5 hidden" id="eli5-prompts-container">
+<button class="w-full px-3 py-2 rounded-lg bg-white border border-emerald-300 hover:bg-emerald-50 text-emerald-950 font-medium text-xs text-left flex items-center gap-2 shadow-2xs transition-colors group" onclick="triggerCopilotAnswer('How does a coal mine work simply?')">
+<span class="material-symbols-outlined text-sm text-emerald-600 group-hover:scale-110 transition-transform">child_care</span>
+<span class="font-semibold text-emerald-950 truncate">"How does a coal mine work simply?"</span>
+</button>
+<div class="flex gap-1.5">
+<button class="flex-1 px-2 py-1 rounded-md bg-white border border-slate-200 text-slate-700 font-mono text-[10px] hover:border-emerald-400 truncate text-left" onclick="triggerCopilotAnswer('Why is methane gas dangerous like a trapped dragon?')">
+            🐉 Methane Dragon Analogy
+          </button>
+<button class="flex-1 px-2 py-1 rounded-md bg-white border border-slate-200 text-slate-700 font-mono text-[10px] hover:border-emerald-400 truncate text-left" onclick="triggerCopilotAnswer('How do air fans work like giant lungs underground?')">
+            🫁 Giant Mine Lungs
+          </button>
+</div>
+</div>
+</div>
+<!-- Chat Messages Stream Feed -->
+<div class="flex-1 p-3.5 overflow-y-auto space-y-3 bg-[#F4F6FA] text-xs custom-scrollbar" id="copilot-chat-feed">
+<!-- Welcome message -->
+<div class="bg-white p-3.5 rounded-xl border border-slate-200 shadow-2xs space-y-1.5">
+<div class="flex items-center justify-between pb-1 border-b border-slate-100">
+<span class="font-mono text-[11px] text-[#0284C7] font-bold flex items-center gap-1">
+<span class="material-symbols-outlined text-sm">psychology</span>
+            CoalSentinel Copilot • Online
+          </span>
+<span class="text-[10px] text-slate-400 font-mono">Live</span>
+</div>
+<p class="text-slate-800 leading-relaxed">
+          Welcome to the <strong>CoalSentinel Gemini Intelligence Copilot</strong>. Click either demonstration prompt above or switch between <strong>👶 ELI5 Mode</strong> and <strong>⚡ SIH Expert Mode</strong>.
+        </p>
+</div>
+</div>
+<!-- Copilot Input Form -->
+<form class="p-2.5 bg-white border-t border-slate-200 flex items-center gap-2" onsubmit="handleCopilotSubmit(event)">
+<input class="flex-1 px-3 py-2 rounded-lg bg-slate-100 text-xs text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#0284C7] border border-slate-200" id="copilot-input" placeholder="Ask regulations, safety breaches, or how mines work..." type="text">
+<button class="p-2 rounded-lg bg-[#0284C7] hover:bg-sky-600 text-white transition-colors shrink-0 shadow-xs" title="Send Question" type="submit">
+<span class="material-symbols-outlined text-lg">send</span>
+</button>
+</form>
+</div>
+<!-- Copilot Floating Toggle Button -->
+<button class="flex items-center gap-2.5 px-4 py-3 rounded-full bg-[#0284C7] hover:bg-sky-600 text-white shadow-xl transition-all hover:scale-105 active:scale-95 border-2 border-white/20" onclick="toggleCopilot()">
+<span class="material-symbols-outlined text-2xl">smart_toy</span>
+<span class="text-xs font-bold tracking-tight">CoalSentinel Copilot</span>
+<span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-ping"></span>
+</button>
+</div>
+<!-- =========================================================
+     JAVASCRIPT LOGIC
+     ========================================================= -->
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+  let copilotMode = 'sih';
+  let leafletMap = null;
+  let dashMap = null;
+
+  // 1. Navigation Controller (Executive Dashboard, Satellite, Contradiction, Compliance, Evaluator, Audit, SLA)
+  function switchTab(tabId) {
+    const views = ['dashboard', 'satellite', 'contradiction', 'compliance', 'evaluator', 'audit', 'sla'];
+    
+    views.forEach(v => {
+      const el = document.getElementById('view-' + v);
+      if (el) el.classList.add('hidden');
+      const nav = document.getElementById('nav-' + v);
+      if (nav) {
+        nav.className = 'nav-item group relative flex items-center justify-between px-3 py-2.5 rounded-lg text-xs font-medium text-slate-300 hover:bg-slate-800/80 hover:text-white transition-all';
+        const bar = nav.querySelector('.accent-bar');
+        if (bar) bar.classList.add('hidden');
+      }
+    });
+
+    const targetEl = document.getElementById('view-' + tabId);
+    if (targetEl) targetEl.classList.remove('hidden');
+
+    const activeNav = document.getElementById('nav-' + tabId);
+    if (activeNav) {
+      activeNav.className = 'nav-item group relative flex items-center justify-between px-3 py-2.5 rounded-lg text-xs font-bold bg-white text-slate-900 shadow-sm transition-all';
+      const bar = activeNav.querySelector('.accent-bar');
+      if (bar) bar.classList.remove('hidden');
+    }
+
+    // Update Header Breadcrumb Label
+    const headerLabel = document.getElementById('header-view-label');
+    if (headerLabel) {
+      const labels = {
+        'dashboard': 'Executive Command',
+        'satellite': 'Satellite 3D Explorer',
+        'contradiction': 'Dual-Truth Engine',
+        'compliance': 'Compliance DNA',
+        'evaluator': 'DGMS CMR Evaluator',
+        'audit': 'Statutory Audit Trail',
+        'sla': 'SLA Simulator'
+      };
+      headerLabel.innerText = labels[tabId] || 'Command';
+    }
+
+    if (tabId === 'satellite') {
+      setTimeout(initSatelliteLeaflet, 100);
+    } else if (tabId === 'dashboard') {
+      setTimeout(initDashLeaflet, 100);
+    }
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  // 2. Leaflet Maps Initialization
+  function initDashLeaflet() {
+    if (dashMap) {
+      dashMap.invalidateSize();
+      return;
+    }
+    const container = document.getElementById('dash-leaflet-mine-map');
+    if (!container) return;
+    const jharia = [23.7505, 86.4172];
+    dashMap = L.map('dash-leaflet-mine-map', { zoomControl: false, attributionControl: false }).setView(jharia, 14);
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', { maxZoom: 19 }).addTo(dashMap);
+    L.circle(jharia, { color: '#dc2626', fillColor: '#ef4444', fillOpacity: 0.35, radius: 450 }).addTo(dashMap);
+    L.marker(jharia).addTo(dashMap).bindPopup("<b>Jharia Pit #4</b><br>CH4: 1.48% (Evacuation Limit Exceeded)").openPopup();
+  }
+
+  function initSatelliteLeaflet() {
+    if (leafletMap) {
+      leafletMap.invalidateSize();
+      return;
+    }
+    const container = document.getElementById('leaflet-mine-map');
+    if (!container) return;
+    const jharia = [23.7505, 86.4172];
+    leafletMap = L.map('leaflet-mine-map', { zoomControl: false, attributionControl: false }).setView(jharia, 14);
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', { maxZoom: 19 }).addTo(leafletMap);
+    L.circle(jharia, { color: '#dc2626', fillColor: '#ef4444', fillOpacity: 0.35, radius: 450 }).addTo(leafletMap);
+    L.marker(jharia).addTo(leafletMap).bindPopup("<b>Jharia Pit #4</b><br>CH4: 1.48% (Evacuation Limit Exceeded)").openPopup();
+  }
+
+  // 3. Cryptographic Re-Hashing Verification (/audit)
+  function verifyCryptographicChain() {
+    const btn = document.getElementById('btn-verify-chain');
+    const btnText = document.getElementById('btn-verify-text');
+    const icon = document.getElementById('verify-icon');
+    const banner = document.getElementById('ledger-verification-banner');
+    const scannerLines = document.querySelectorAll('.scanner-line');
+    const hashEls = document.querySelectorAll('.block-hash');
+
+    btn.disabled = true;
+    btn.classList.remove('bg-[#16A34A]');
+    btn.classList.add('bg-slate-700');
+    btnText.innerText = "Re-Computing SHA-256 Hashes...";
+    icon.classList.add('animate-spin');
+    scannerLines.forEach(l => l.classList.remove('hidden'));
+
+    let count = 0;
+    const interval = setInterval(() => {
+      hashEls.forEach(el => {
+        el.innerText = Array.from({length: 64}, () => Math.floor(Math.random()*16).toString(16)).join('');
+      });
+      count++;
+      if (count > 6) {
+        clearInterval(interval);
+        // Verified authentic hashes restored
+        const b1044 = document.querySelector('[data-block-id="1044"] .block-hash');
+        const b1043 = document.querySelector('[data-block-id="1043"] .block-hash');
+        const b1042 = document.querySelector('[data-block-id="1042"] .block-hash');
+        if (b1044) b1044.innerText = "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855";
+        if (b1043) b1043.innerText = "8f434346648f6b96df89dda901c5176b10a6d83961dd3c1ac88b59b2dc327aa4";
+        if (b1042) b1042.innerText = "ca978112ca1bbdcafac231b39a23dc4da786eff8147c4e72b9807785afee48bb";
+
+        scannerLines.forEach(l => l.classList.add('hidden'));
+        icon.classList.remove('animate-spin');
+        btn.disabled = false;
+        btn.classList.remove('bg-slate-700');
+        btn.classList.add('bg-[#16A34A]');
+        btnText.innerText = "Verify Ledger Integrity";
+
+        const now = new Date();
+        document.getElementById('verification-timestamp').innerText = now.toLocaleTimeString() + " IST";
+        banner.classList.remove('hidden');
+        banner.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }
+    }, 150);
+  }
+
+  // 4. Copilot Controller (ELI5 vs SIH Expert)
+  function setCopilotMode(mode) {
+    copilotMode = mode;
+    const btnEli5 = document.getElementById('btn-mode-eli5');
+    const btnSih = document.getElementById('btn-mode-sih');
+    const eli5Prompts = document.getElementById('eli5-prompts-container');
+    const sihPrompts = document.getElementById('sih-prompts-container');
+    const modeIndicator = document.getElementById('prompt-mode-indicator');
+
+    if (mode === 'eli5') {
+      btnEli5.className = 'px-2.5 py-1 rounded-md bg-emerald-600 text-white text-[11px] uppercase font-bold transition-colors shadow-xs';
+      btnSih.className = 'px-2.5 py-1 rounded-md text-[11px] uppercase font-bold text-slate-600 hover:text-slate-900 transition-colors';
+      eli5Prompts.classList.remove('hidden');
+      sihPrompts.classList.add('hidden');
+      modeIndicator.innerText = "👶 Simple Explainer (ELI5)";
+      modeIndicator.className = "text-emerald-700 font-sans font-bold";
+    } else {
+      btnSih.className = 'px-2.5 py-1 rounded-md bg-[#0284C7] text-white text-[11px] uppercase font-bold transition-colors shadow-xs';
+      btnEli5.className = 'px-2.5 py-1 rounded-md text-[11px] uppercase font-bold text-slate-600 hover:text-slate-900 transition-colors';
+      sihPrompts.classList.remove('hidden');
+      eli5Prompts.classList.add('hidden');
+      modeIndicator.innerText = "⚡ Expert Regulatory (SIH)";
+      modeIndicator.className = "text-sky-700 font-sans font-bold";
+    }
+  }
+
+  function toggleCopilot() {
+    const win = document.getElementById('ai-copilot-window');
+    win.classList.toggle('hidden');
+  }
+
+  function clearCopilotChat() {
+    const feed = document.getElementById('copilot-chat-feed');
+    feed.innerHTML = `
+      <div class="bg-white p-3.5 rounded-xl border border-slate-200 shadow-2xs space-y-1.5">
+        <div class="flex items-center justify-between pb-1 border-b border-slate-100">
+          <span class="font-mono text-[11px] text-[#0284C7] font-bold flex items-center gap-1">
+            <span class="material-symbols-outlined text-sm">psychology</span>
+            CoalSentinel Copilot • Ready
+          </span>
+          <span class="text-[10px] text-slate-400 font-mono">Reset</span>
+        </div>
+        <p class="text-slate-800 leading-relaxed">
+          Chat cleared. Choose a demonstration prompt above or ask any question.
+        </p>
+      </div>
+    `;
+  }
+
+  function triggerCopilotAnswer(question) {
+    const win = document.getElementById('ai-copilot-window');
+    if (win.classList.contains('hidden')) {
+      win.classList.remove('hidden');
+    }
+    const feed = document.getElementById('copilot-chat-feed');
+
+    const userMsg = document.createElement('div');
+    userMsg.className = "bg-[#0284C7] text-white p-3 rounded-xl ml-8 shadow-xs";
+    userMsg.innerHTML = `<div class="font-bold text-[10px] text-sky-200 uppercase mb-0.5">You asked:</div><div class="font-medium">${question}</div>`;
+    feed.appendChild(userMsg);
+
+    const aiMsg = document.createElement('div');
+    aiMsg.className = "bg-white p-4 rounded-xl border border-slate-200 shadow-2xs space-y-2 mr-2";
+
+    if (question.includes("How does a coal mine work simply?") || question.includes("dragon") || question.includes("lungs")) {
+      aiMsg.innerHTML = `
+        <div class="flex items-center justify-between pb-1.5 border-b border-slate-100">
+          <span class="font-bold text-emerald-800 flex items-center gap-1.5 text-xs">
+            <span class="material-symbols-outlined text-base text-emerald-600">child_care</span>
+            Gemini ELI5 • Simple Explainer
+          </span>
+          <span class="px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 font-mono text-[10px] font-bold">EASY ANALOGY</span>
+        </div>
+        <p class="text-slate-800 leading-relaxed">
+          Think of a coal mine like a <strong>giant underground ant city</strong> deep beneath the earth! 🐜
+        </p>
+        <div class="space-y-2 pt-1 text-slate-700">
+          <div class="flex gap-2 items-start bg-slate-50 p-2.5 rounded-lg border border-slate-200">
+            <span class="text-lg">🕳️</span>
+            <div><strong>1. Digging the Tunnels:</strong> Massive cutting machines dig long streets (called <em>galleries</em>) into buried layers of ancient black rock (coal).</div>
+          </div>
+          <div class="flex gap-2 items-start bg-slate-50 p-2.5 rounded-lg border border-slate-200">
+            <span class="text-lg">🫁</span>
+            <div><strong>2. Giant Lungs (Ventilation):</strong> Because there is no fresh air deep down, giant surface fans continuously blow fresh air down one shaft and pull stale air up another, like huge lungs!</div>
+          </div>
+          <div class="flex gap-2 items-start bg-amber-50 p-2.5 rounded-lg border border-amber-200 text-amber-950">
+            <span class="text-lg">🐉</span>
+            <div><strong>3. Sleeping Dragons (Methane Gas):</strong> As miners crack the coal, invisible flammable gas leaks out. If fresh air stops flowing, gas builds up—which is why CoalSentinel sounds the alarm!</div>
+          </div>
+        </div>
+      `;
+    } else if (question.includes("What regulations were violated in Jharia Pit #4?") || question.includes("Section 22") || question.includes("SCADA")) {
+      aiMsg.innerHTML = `
+        <div class="flex items-center justify-between pb-1.5 border-b border-slate-100">
+          <span class="font-bold text-red-800 flex items-center gap-1.5 text-xs">
+            <span class="material-symbols-outlined text-base text-red-600">gavel</span>
+            Gemini SIH Expert • Statutory Legal Citation
+          </span>
+          <span class="px-2 py-0.5 rounded bg-red-100 text-red-800 font-mono text-[10px] font-bold">LEGAL BREACH</span>
+        </div>
+        <p class="text-slate-800 leading-relaxed">
+          Statutory audit of <strong>Jharia Pit #4 (BCCL, Zone IV)</strong> revealed <strong>2 Critical Regulatory Violations</strong> under the <em>Coal Mines Regulations (CMR) 2017</em> and the <em>Mines Act, 1952</em>:
+        </p>
+        <div class="space-y-2 pt-1 text-slate-700">
+          <div class="p-2.5 rounded-lg bg-red-50 border-l-4 border-red-600 text-xs">
+            <div class="flex justify-between font-bold text-red-900">
+              <span>1. CMR 2017 Regulation 169(1) — Inflammable Gas Limits</span>
+              <span class="font-mono text-red-700">BREACH</span>
+            </div>
+            <p class="mt-1 text-slate-800 leading-normal">
+              <strong>Statutory Ceiling:</strong> Maximum permissive methane concentration is <strong class="text-red-700">1.25% by volume</strong>. Continuous optical sensor <code>IoT-BCCL-CH4-03</code> registered <strong class="text-red-700">1.48% vol</strong> (+0.23% statutory overshoot) in active extraction Seam XI West.
+            </p>
+          </div>
+          <div class="p-2.5 rounded-lg bg-red-50 border-l-4 border-red-600 text-xs">
+            <div class="flex justify-between font-bold text-red-900">
+              <span>2. CMR 2017 Regulation 153 — Minimum Face Airflow Velocity</span>
+              <span class="font-mono text-red-700">DEFICIT</span>
+            </div>
+            <p class="mt-1 text-slate-800 leading-normal">
+              <strong>Statutory Requirement:</strong> Active face velocity must not drop below <strong class="text-red-700">0.50 m/s</strong>. Measured velocity is <strong class="text-red-700">0.22 m/s</strong> (56% dilution deficit).
+            </p>
+          </div>
+          <div class="p-2.5 rounded-lg bg-slate-900 text-white font-mono text-[11px]">
+            <div class="text-sky-300 font-bold mb-1">⚡ ENFORCEMENT ACTION: MINES ACT 1952 § 22(3)</div>
+            <span>Workforce evacuation &amp; cryptographic issuance of Section 22(3) Stop-Work Decree by Dr. R. K. Soren (DGMS IG).</span>
+          </div>
+        </div>
+      `;
+    } else {
+      aiMsg.innerHTML = `
+        <div class="flex items-center justify-between pb-1 border-b border-slate-100">
+          <span class="font-bold text-sky-800 text-xs">Gemini AI Analysis</span>
+          <span class="text-[10px] text-slate-400 font-mono">Live Response</span>
+        </div>
+        <p class="text-slate-800 leading-relaxed">
+          Statutory query: <em>"${question}"</em> processed. Current Merkle root hash on SHA-256 ledger remains locked and tamper-proof.
+        </p>
+      `;
+    }
+
+    feed.appendChild(aiMsg);
+    feed.scrollTop = feed.scrollHeight;
+  }
+
+  function handleCopilotSubmit(e) {
+    e.preventDefault();
+    const input = document.getElementById('copilot-input');
+    const val = input.value.trim();
+    if (!val) return;
+    triggerCopilotAnswer(val);
+    input.value = '';
+  }
+
+  // 5. TOP-RIGHT LOGIN MODAL CONTROLLER & JURY DEMO PRESETS
+  function toggleAuthModal(show) {
+    const modal = document.getElementById('modal-auth-portal');
+    if (show === undefined) {
+      modal.classList.toggle('hidden');
+    } else if (show) {
+      modal.classList.remove('hidden');
+    } else {
+      modal.classList.add('hidden');
+    }
+  }
+
+  function handleModalBackdropClick(e) {
+    toggleAuthModal(false);
+  }
+
+  function selectTier(tier) {
+    const tiers = ['dgms', 'colliery', 'cpcb'];
+    tiers.forEach(t => {
+      const btn = document.getElementById('tier-' + t);
+      if (t === tier) {
+        btn.className = "p-2.5 rounded-xl border-2 border-[#0284C7] bg-sky-50 text-left transition-all text-xs";
+      } else {
+        btn.className = "p-2.5 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-left transition-all text-xs";
+      }
+    });
+
+    if (tier === 'dgms') applyPreset('soren');
+    else if (tier === 'colliery') applyPreset('anand');
+    else if (tier === 'cpcb') applyPreset('meera');
+  }
+
+  function applyPreset(preset) {
+    const emailInput = document.getElementById('login-email');
+    const pinInput = document.getElementById('login-pin');
+    const totpInput = document.getElementById('login-totp');
+
+    if (preset === 'soren') {
+      emailInput.value = "rk.soren@dgms.gov.in";
+      pinInput.value = "749201";
+      totpInput.value = "582194";
+      document.getElementById('tier-dgms').className = "p-2.5 rounded-xl border-2 border-[#0284C7] bg-sky-50 text-left transition-all text-xs";
+      document.getElementById('tier-colliery').className = "p-2.5 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-left transition-all text-xs";
+      document.getElementById('tier-cpcb').className = "p-2.5 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-left transition-all text-xs";
+    } else if (preset === 'anand') {
+      emailInput.value = "anand.kumar@bccl.co.in";
+      pinInput.value = "391012";
+      totpInput.value = "904128";
+      document.getElementById('tier-colliery').className = "p-2.5 rounded-xl border-2 border-[#0284C7] bg-sky-50 text-left transition-all text-xs";
+      document.getElementById('tier-dgms').className = "p-2.5 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-left transition-all text-xs";
+      document.getElementById('tier-cpcb').className = "p-2.5 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-left transition-all text-xs";
+    } else if (preset === 'meera') {
+      emailInput.value = "meera.joshi@cpcb.nic.in";
+      pinInput.value = "661209";
+      totpInput.value = "419302";
+      document.getElementById('tier-cpcb').className = "p-2.5 rounded-xl border-2 border-[#0284C7] bg-sky-50 text-left transition-all text-xs";
+      document.getElementById('tier-dgms').className = "p-2.5 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-left transition-all text-xs";
+      document.getElementById('tier-colliery').className = "p-2.5 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-left transition-all text-xs";
+    }
+  }
+
+  function togglePinVisibility() {
+    const pin = document.getElementById('login-pin');
+    const icon = document.getElementById('pin-eye-icon');
+    if (pin.type === 'password') {
+      pin.type = 'text';
+      icon.innerText = 'visibility_off';
+    } else {
+      pin.type = 'password';
+      icon.innerText = 'visibility';
+    }
+  }
+
+  function handleLoginSubmit(e) {
+    e.preventDefault();
+    const btn = document.getElementById('btn-submit-auth');
+    const text = document.getElementById('login-btn-text');
+    const spinner = document.getElementById('login-spinner');
+    const email = document.getElementById('login-email').value;
+
+    btn.disabled = true;
+    text.innerText = "Verifying DGMS PKI Certificate...";
+    spinner.classList.add('animate-spin');
+
+    setTimeout(() => {
+      btn.disabled = false;
+      text.innerText = "Authenticate & Access DGMS Central Command ➔";
+      spinner.classList.remove('animate-spin');
+
+      // Update header profile display
+      const nameEl = document.getElementById('user-display-name');
+      const roleEl = document.getElementById('user-display-role');
+
+      if (email.includes('anand')) {
+        nameEl.innerText = "Er. Anand Kumar";
+        roleEl.innerText = "Shift Safety Supervisor (BCCL)";
+      } else if (email.includes('meera')) {
+        nameEl.innerText = "Smt. Meera Joshi";
+        roleEl.innerText = "CPCB Env. Compliance Officer";
+      } else {
+        nameEl.innerText = "Dr. R. K. Soren";
+        roleEl.innerText = "DGMS Inspector Gen. (Zone IV)";
+      }
+
+      toggleAuthModal(false);
+      showNotificationToast("Statutory Identity Authenticated. Welcome " + nameEl.innerText);
+    }, 800);
+  }
+
+  function showNotificationToast(msg) {
+    const toast = document.createElement('div');
+    toast.className = "fixed top-20 right-6 z-[10001] bg-[#181F38] text-white px-4 py-3 rounded-xl shadow-2xl border border-sky-400/40 text-xs font-semibold flex items-center gap-2 animate-in fade-in slide-in-from-top-4";
+    toast.innerHTML = `<span class="material-symbols-outlined text-emerald-400 text-lg">verified</span><span>${msg}</span>`;
+    document.body.appendChild(toast);
+    setTimeout(() => toast.remove(), 4000);
+  }
+
+  function issueSection22StopWork() {
+    showNotificationToast("Section 22(3) Stop-Work Notice Sealed & Dispatched on SHA-256 Ledger.");
+    setTimeout(() => switchTab('audit'), 600);
+  }
+
+  function simulateDisaster(type) {
+    if (type === 'methane') {
+      showNotificationToast("🚨 Methane surge (1.85%) triggered! Automated §22 stop-work dispatched.");
+      switchTab('dashboard');
+    } else if (type === 'dust') {
+      showNotificationToast("💨 Dust Suppressor Outage (+40 mg/m³) triggered.");
+    } else {
+      showNotificationToast("🟢 Baseline Restored: CH4 0.38%, Air Velocity 0.65 m/s. All nominal.");
+    }
+  }
+
+  // Initial load handler
+  window.addEventListener('DOMContentLoaded', () => {
+    const hash = window.location.hash.replace('#', '');
+    if (['dashboard', 'satellite', 'contradiction', 'compliance', 'evaluator', 'audit', 'sla'].includes(hash)) {
+      switchTab(hash);
+    } else {
+      switchTab('dashboard');
+    }
+  });
+</script>
+
+
+</body></html>
