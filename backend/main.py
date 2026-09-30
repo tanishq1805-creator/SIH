@@ -1,8 +1,10 @@
 from fastapi import FastAPI, HTTPException, Query, Body
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import HTMLResponse
 from pydantic import BaseModel
 from typing import Optional, List, Dict, Any
 import datetime
+import os
 import uvicorn
 
 from config import PORT, MAPTILER_API_KEY, GEMINI_API_KEY
@@ -52,6 +54,28 @@ class ScenarioRequest(BaseModel):
 class ActionUpdateRequest(BaseModel):
     status: str # 'PENDING', 'IN_PROGRESS', 'RESOLVED'
     resolution_notes: Optional[str] = None
+
+# --- MERGED FRONTEND & BACKEND ROOT ---
+
+@app.get("/", response_class=HTMLResponse)
+@app.get("/code.html", response_class=HTMLResponse)
+def serve_frontend_root():
+    """
+    Unified Single-Port Deployment:
+    Directly serves CoalSentinel AI Single-Page Frontend at http://localhost:8001/
+    fully integrating UI and API into a single cohesive server.
+    """
+    possible_paths = [
+        os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "frontend", "code.html"),
+        os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "code.html"),
+        os.path.join(os.path.dirname(os.path.abspath(__file__)), "code.html"),
+        "code.html"
+    ]
+    for p in possible_paths:
+        if os.path.exists(p):
+            with open(p, "r", encoding="utf-8") as f:
+                return HTMLResponse(content=f.read())
+    return HTMLResponse("<h1>CoalSentinel AI Portal is loading...</h1>")
 
 # --- API Endpoints ---
 

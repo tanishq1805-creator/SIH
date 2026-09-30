@@ -6,8 +6,8 @@
 Write-Host "==================================================================" -ForegroundColor Yellow
 Write-Host "  ⛏️  CoalSentinel AI - SIH 2026 Final Round Command Launcher   " -ForegroundColor Green
 Write-Host "==================================================================" -ForegroundColor Yellow
-Write-Host "  * Verified MapTiler Satellite API: ACTIVE (Key: hKLFGIcit6tIxzesSNve)" -ForegroundColor Cyan
-Write-Host "  * Verified Google Gemini AI Copilot: ACTIVE (Key: AQ.Ab8RN6Jb1voiylye...)" -ForegroundColor Cyan
+Write-Host "  * Verified MapTiler Satellite API: ACTIVE" -ForegroundColor Cyan
+Write-Host "  * Verified Google Gemini AI Copilot: ACTIVE" -ForegroundColor Cyan
 Write-Host "  * Codified DGMS Coal Mines Regulations 2017 Engine: ACTIVE" -ForegroundColor Cyan
 Write-Host "  * SHA-256 Tamper-Proof Cryptographic Blockchain: ACTIVE" -ForegroundColor Cyan
 Write-Host "==================================================================" -ForegroundColor Yellow
@@ -22,7 +22,7 @@ Start-Sleep -Seconds 3
 
 # 2. Start Next.js Frontend on Port 3001
 Write-Host "[2/3] Starting Next.js 14 Command Dashboard on http://localhost:3001 ..." -ForegroundColor Magenta
-$frontendJob = Start-Process powershell -ArgumentList "-NoExit", "-Command", "cd '$scriptDir\frontend'; npm run start" -PassThru
+$frontendJob = Start-Process powershell -ArgumentList "-NoExit", "-Command", "cd '$scriptDir\frontend'; npm run dev" -PassThru
 
 Start-Sleep -Seconds 4
 

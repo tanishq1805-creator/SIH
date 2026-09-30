@@ -11,7 +11,7 @@ interface MapTilerViewProps {
   onSelectMine: (mineId: string) => void;
 }
 
-const MAPTILER_KEY = 'hKLFGIcit6tIxzesSNve';
+const MAPTILER_KEY = process.env.NEXT_PUBLIC_MAPTILER_API_KEY || '';
 
 export default function MapTilerView({ mines, selectedMineId, onSelectMine }: MapTilerViewProps) {
   const mapContainer = useRef<HTMLDivElement>(null);

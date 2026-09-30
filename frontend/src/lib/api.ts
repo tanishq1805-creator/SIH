@@ -10,7 +10,7 @@ import {
   AuditVerification
 } from './types';
 
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api';
+const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8001/api';
 
 export async function fetchHealth(): Promise<{ status: string }> {
   try {
@@ -165,7 +165,7 @@ export async function sendCopilotChat(query: string, mode: 'eli5' | 'expert', mi
     return {
       status: 'offline',
       mode,
-      answer: "I am having trouble reaching the local AI gateway. Please ensure the CoalSentinel backend is running on port 8000."
+      answer: "I am having trouble reaching the local AI gateway. Please ensure the CoalSentinel backend is running on port 8001."
     };
   }
 }

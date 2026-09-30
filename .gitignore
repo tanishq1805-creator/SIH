@@ -20,8 +20,24 @@ venv/
 ENV/
 *.db-journal
 
-# Environment variables (keep templates if needed)
-.env*.local
+# Environment variables & secrets (CRITICAL: NEVER COMMIT TO GIT)
+.env
+.env*
+*.env
+*.env.*
+*.env.local
+*.env.*.local
+backend/.env
+backend/.env*
+frontend/.env
+frontend/.env*
+!*.env.example
+
+# Temporary HTML & code dumps
+code.html
+frontend/code.html
+frontend/public/code.html
+frontend/public/index.html
 
 # Logs
 logs/
